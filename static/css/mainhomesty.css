@@ -1,0 +1,490 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: auto;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4e8e8;
+    overflow-x: hidden;
+}
+
+#left h1 {
+    font-size: 1.7rem;
+}
+
+#left h3 {
+    font-size: 1.2rem;
+}
+
+#lrig {
+    margin-top: 2%;
+}
+
+.m_container {
+    top: 0;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2%
+}
+
+#logo {
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+} 
+
+#left {
+    display: flex;
+    flex: 1;
+    gap: 5%;
+}
+
+#right {
+    flex: 1;
+    text-align: right;
+    margin-top: 1%;
+}
+
+.vl {
+    border-left: 3px solid rgb(242, 183, 183);
+    height: auto;
+    margin-bottom: 1%;
+}
+
+#link {
+    color: white;
+    font-size: 1.2rem;
+}
+
+#link:hover {
+    color: #402626;
+}
+
+header {
+    background-color: #17151c;
+    color: #fff;
+    padding: 20px 0;
+    top: 0;
+    height: fit-content;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+}
+
+#links {
+    text-decoration: none;
+    color:black;
+    width: 100%;
+}
+
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    margin-top: 50px;
+    width: 100%;
+    height: 10%;
+}
+
+footer p {
+    font-size: 14px;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.social-media {
+    margin-bottom: 10px;
+}
+
+.social-media a {
+    margin-right: 10px;
+}
+
+.social-media img {
+    width: 30px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.contact-info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+nav {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+}
+
+@media only screen and (min-width: 751px) {
+    .hamburger {
+        display: none;
+    }
+    nav ul {
+        display: flex;
+        justify-content: flex-end;
+    }
+    nav {
+        position: static;
+        margin-top: 20px;
+    } 
+}
+
+#browseListing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+#hero{
+    padding-top: 5%;
+    padding-bottom: 5%;
+    display: flex;
+    justify-content: center;
+    background-image: url(../images/donback.jpg);
+    background-size: 100% 100%;
+}
+
+#tag {
+    margin-left: 28 px;
+    font-size: 1.9rem;
+    text-align: center;
+}
+
+#br{
+    margin-left: 28 px;
+}
+
+form {
+    margin-right: 50px;
+    margin-top: 25px;
+}
+
+#search-input {
+    padding: 10px;
+    width: 71vw;
+}
+
+#search-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+#results {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+#pr {
+    margin-top: 25px;
+    margin-right: 240px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 370px;
+    margin-top: 30px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+
+.donation-item {
+    display: flex;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#hoverchange:hover{
+    background-color: #ccc;
+}
+
+.donation-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.donation-details {
+    flex-grow: 1;   
+    width: 100%;
+}
+
+#m_content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#searchResults {
+    max-height: 400px; 
+    overflow-y: auto; 
+    border: 1px solid #201919;
+    margin-top: 10px;
+    width: 80%;
+}
+
+#serch{
+    margin-left: 47px;
+}
+
+    .basic{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 15px;
+    }
+    
+    
+    .para{
+        margin-top: 10px;
+        font-size: 22px;
+        font-weight: 100;
+        font-style: normal;
+        font-family: Nunito;
+    }
+
+    hr{
+        height: 10px;
+        margin-top: 60px;
+        width:80%;
+        position: relative;
+        left: 17%;  
+    }
+
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .box {
+        margin-bottom: 20px;
+    }
+
+    .box-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .flex {
+        flex-direction: row;
+    }
+
+    .img-left, .img-right {
+        width: 45%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .text {
+        width: 45%;
+    }
+
+    @media (max-width: 768px) {
+        .box-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #rev1, #rev2{
+            flex-direction: column-reverse;
+        }
+
+        .img-left, .img-right {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .text {
+            width: 100%;
+        }
+    }
+
+
+
+    .donations-section {
+        width: 100%;
+        margin-top: 20px;
+        background-color: #fcf2f2;
+        padding-bottom: 40px;
+        min-width: 500px;
+    }
+    
+    .donation-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    
+    .donation-item.even {
+        background-color: #f9f9f9; /* Alternate background color for even rows */
+    }
+    
+    .donation-item.odd {
+        background-color: #e9e9e9; /* Alternate background color for odd rows */
+    }
+    
+    .column {
+        flex: 1;
+        padding: 5px;
+    }
+    
+    #headin {
+        display: flex;
+        justify-content: center;
+    }
+    
+    #txthead {
+        margin-top: 15px;
+    }
+    
+    #headitems {
+        display: flex;
+        justify-content: space-between;
+        background-color: #e6deff;
+        padding: 7px;
+        font-size: 21px;
+    }
+    
+    .colhead {
+        padding: 5px;
+        flex: 1;
+    }
+    
+    #quant {
+        margin-left: 10px;
+    }
+    
+
+    #profile {
+        font-size: 23px;
+    }
+    
+    #linkprofile{
+        text-decoration:none;
+        color: white;
+    }
+    
+    #linkprofile:hover{
+        color: rgb(244, 78, 78);
+    }
+
+    #user1 {
+        margin-right: 1%;
+        margin-top: 2.2%;
+        width: 69px;
+        height: 35px;
+        text-align: center;
+        padding-top: 2px;
+        border-radius: 10%;
+        background-color: red;
+    }
+
+
+
+
+
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #17151c;
+    color: white;
+    padding: 16px;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 25px;
+    border-radius: 5%;
+}
+
+/* Dropdown arrow */
+.arrow {
+    margin-left: 5px;
+    font-size: 15px;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #2c312d;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}

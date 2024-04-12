@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/ngohome.css" %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <title>Donate Now</title>
+</head>
+<body>
+
+    <header>
+        <div class="m_container">
+            <div id="left">
+                <div>
+                    <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
+                </div>
+                <div id="lrig">
+                        <h1>ShareKare</h1>
+                        <h3>Connecting Surplus with Need</h3>
+                    </span>
+                </div>
+            </div>
+            <div id="right">
+                <nav>
+                    <ul>
+                        <div id="profile"><a href="{% url 'ngo_profile' %}" id="linkprofile">Profile</a></div>
+                    </ul>
+                </nav>
+            </div>
+            <div class="vl"></div>
+            <div id="user1">
+                <a id ="link" href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      {% endfor %}
+    {% endif %}
+
+    <h1 id="welcome" align="center">Welcome, {{ ngoname }}</h1>
+    
+    
+    <div id="hero">
+    <div id="browseListing">
+        <br><br>
+        <h3 id="tag">BROWSE LISTINGS</h3>
+        <p id="br">Search items which You wish to donate??</p>
+        <div id="serch">
+            <form id="search-form">
+                <input type="text" id="search-input" name ="q" placeholder="Search items you wish to donate...">
+                <button type="submit" id="search-btn">Search</button>
+            </form>
+        </div><br>
+        <div id="searchResults">
+            {% for donation in donation %}
+            <a href="{% url 'user_donation' user_id=donation.user.id product_id=donation.id %}" id="parentlink">
+                <div id="parentt">
+                    <div class="donation-item">
+                        <br>
+                        <div class="donation-image">
+                            <img src="{{ donation.product_images.url }}" alt="{{ donation.other_products }}">
+                        </div>
+                        <div class="donation-details">
+                            <h2>{{ donation.other_products }}</h2>
+                            <p>Name: {{ donation.user.first_name }}</p>
+                            <p>Phone Number: {{ donation.phone_number }}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+                <p>No donations found.</p>
+            {% endfor %}
+        </div>
+
+        <h5 align="center">Don't find Your search??
+        <a href="{% url 'create_donation' %}">CREATE LISTINGS</a></h5><br>
+        <h5 align="center">OR <br><br>
+        <div id="launchC"><a href="{% url 'create_campaign' %}" id="launchid">Launch a campaign</a></div></h5>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>

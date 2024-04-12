@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Donations</title>
+    <link rel="stylesheet" href="{% static "css/ngo_prof.css" %}"/>
+</head>
+<body>
+
+    <header>
+        <div class="m_container">
+            <div id="left">
+                <div>
+                    <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
+                </div>
+                <div id="lrig">
+                        <h1>ShareKare</h1>
+                        <h3>Connecting Surplus with Need</h3>
+                    </span>
+                </div>
+            </div>
+            <div id="right">
+                <nav>
+                    <ul>
+                        <div id="profile"><a href="{% url 'home' %}" id="linkprofile">Home</a></div>
+                    </ul>
+                </nav>
+            </div>
+            <div class="vl"></div>
+            <div id="user1">
+                <a id ="link" href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- NGO Details Section -->
+    <div class="ngo-details-section">
+        <div class="ngo-image">
+            <img id="ngoimg" src="{{ ngo.ngoprofile.image1.url }}" alt="{{ ngo.ngoname }} Image">
+        </div>
+        <div class="ngo-information">
+            <h2>{{ ngo.ngoname }}</h2>
+            <p><strong>Description:</strong> {{ ngo.ngoprofile.description }}</p>
+            <p><strong>Location:</strong> {{ ngo.ngoprofile.location }}</p>
+            <p><strong>Address:</strong> {{ ngo.ngoprofile.address }}</p>
+            <p><strong>Registration Number:</strong> {{ ngo.regno }}</p>
+            <p><strong>Email: </strong>{{ ngo.user.email }}</p>
+        </div>
+    </div>
+
+<div id="grandparent">
+    <div id="parentleft">
+        <div id="hihgdon">
+            <h2>{{product_high.productName}}</h2><br>
+            <p><b>Quantity:  </b>{{product_high.quantity}}</p><br>
+            <p><b>Size:  </b> {{product_high.size}}</p><br>
+            <p><b>Description: </b>{{product_high.description}}</p>            
+        </div>  
+    </div>
+
+    <br><br>
+
+    <div id="parentright">
+        <div class="donations-section">
+            <div id="headin"><div id="txthead"><h2>Few more requirements of {{ ngo.ngoname }} NGO</h2></div></div>
+        </div>
+
+        <h2><div id="headitems">
+            <div class="colhead">Product</div>
+            <div class="colhead">Quantity</div>
+            <div class="colhead">Size</div>
+        </div></h2>
+
+            {% for product in ngo.product_set.all %}
+            {% if product.id != product_high.id %}
+            <a href="{% url 'ngo_donations' product.ngo.id product.id %}" id="links">
+                <div class="donation-item1 {% cycle 'even' 'odd' %}" id="ditem">
+                    <div class="column">
+                        <h3>{{ product.productName }}</h3>
+                    </div>
+                    <div class="column" id="quant">
+                        <p> {{ product.quantity }}</p>
+                    </div>
+                    <div class="column">
+                        <p> {{ product.size }}</p>
+                    </div>
+                </div>
+            </a>
+                
+            {% endif %}
+
+            {% empty %}
+            <br>
+            <p><strong>No donations listed.</strong></p>
+            {% endfor %}
+    </div>
+</div>
+</body>
+</html>

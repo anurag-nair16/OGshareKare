@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Profile</title>
+    <link rel="stylesheet" href="{% static "css/ngo_prof.css" %}"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="m_container">
+            <div id="left">
+                <div>
+                    <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
+                </div>
+                <div id="lrig">
+                        <h1>ShareKare</h1>
+                        <h3>Connecting Surplus with Need</h3>
+                    </span>
+                </div>
+            </div>
+            <div id="right">
+                <nav>
+                    <ul>
+                        <div id="profile"><a href="{% url 'ngo_dashboard' %}" id="linkprofile">Home</a></div>
+                    </ul>
+                </nav>
+            </div>
+            <div class="vl"></div>
+            <div id="user1">
+                <a id ="link" href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="ngo-details-section">
+        <div class="ngo-image">
+            <img id="ngoimg" src="{{ ngo.ngoprofile.image1.url }}" alt="{{ ngo.ngoname }} Image">
+        </div>
+        <div class="ngo-information">
+            <h2>{{ ngo.ngoname }}</h2>
+            <p><strong>Description:</strong> {{ ngo.ngoprofile.description }}</p>
+            <p><strong>Location:</strong> {{ ngo.ngoprofile.location }}</p>
+            <p><strong>Address:</strong> {{ ngo.ngoprofile.address }}</p>
+            <p><strong>Registration Number:</strong> {{ ngo.regno }}</p>
+            <p><strong>Email: </strong>{{ request.user.email }}</p>
+        </div>
+    </div>
+
+    <div class="donations-section">
+        <div id="headin"><div id="txthead"><h2>Donations Listed</h2></div></div>
+        <br>
+        <h2>
+            <div id="headitems">
+                <div class="colhead">Product</div>
+                <div class="colhead">Quantity</div>
+                <div class="colhead">Size</div>
+                <div class="colhead">Description</div>
+            </div>
+    </div>
+        </h2>
+        {% for product in ngo.product_set.all %}
+        <div class="donation-item {% cycle 'even' 'odd' %}">
+            <div class="column">
+                <h3>{{ product.productName }}</h3>
+            </div>
+            <div class="column" id="quant">
+                <p> {{ product.quantity }}</p>
+            </div>
+            <div class="column">
+                <p> {{ product.size }}</p>
+            </div>
+            <div class="column"  id="desc">
+                <p> {{ product.description }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <br>
+        <p><strong>No donations listed.</strong></p>
+        {% endfor %}
+        
+
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">Active Campaigns</h1>
+        
+            <ul class="list-group">
+                {% for campaign in campaigns %}
+                <li class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h4 class="mb-1">{{ campaign.title }}</h4>
+                        <small class="font-weight-bold"><h6>Campaign closing on {{ campaign.end_date }}</h6></small>
+                    </div>
+                    <p class="mb-1 lead">{{ campaign.description }}</p>
+                </li>
+                {% empty %}
+                <li class="list-group-item font-weight-bold">No active campaigns.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+        <br>
+        
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

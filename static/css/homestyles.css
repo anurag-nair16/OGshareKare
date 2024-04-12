@@ -1,0 +1,392 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4e8e8;
+    overflow-x: hidden;
+} 
+
+#left h1 {
+    font-size: 1.7rem;
+}
+
+#left h3 {
+    font-size: 1.2rem;
+}
+
+#lrig {
+    margin-top: 2%;
+}
+
+.m_container {
+    top: 0;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2%
+}
+
+#logo {
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+} 
+
+#left {
+    display: flex;
+    flex: 1;
+    gap: 5%;
+}
+
+#right {
+    flex: 1;
+    text-align: right;
+    margin-top: 1%
+}
+
+.vl {
+    border-left: 3px solid rgb(242, 183, 183);
+    height: auto;
+}
+
+#user {
+    margin-right: 1%;
+    margin-top: 1%;
+}
+
+#ulogo {
+    height: 50px;
+    width: auto;
+    border-radius: 50%;
+}
+
+header {
+    background-color: #17151c;
+    color: #fff;
+    padding: 20px 0;
+    top: 0;
+    height: fit-content;
+    position: relative;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+} 
+
+ nav ul li a {
+    font-size: 1.2rem;
+    color: #fff;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+    color: #ee8b8b;
+    text-decoration: underline;
+}
+
+#hero {
+    background-image: url('../images/hero.jpg');
+    background-size:cover;
+    background-repeat: no-repeat;
+    padding: 100px 0;
+    height: 600px;
+}
+
+#hero-text {
+    /* background-color: rgb(22, 13, 13); */
+    /* color: white; */
+    width: fit-content;
+    text-align: center;
+}
+
+#mid {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 11%;
+}
+
+#hero h3 {
+    background-color: #e9e7fb;
+    font-size: 36px;
+    font-weight: bold;
+    height: fit-content;
+    margin-bottom: 20px;
+}
+
+#FLhead {
+    text-align: center;
+    font-size: 35px;
+}
+
+#hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+#works h2 {
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff5722;
+    color: #fff;
+    font-size: 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    height: auto;
+    width: auto;
+}
+
+.btn:hover {
+    background-color: #f44336;
+}
+
+#featured-listings {
+    padding: 80px 0;
+    background-color: #e3eddb;
+}
+
+.listing {
+    background-color: #a8d0f6;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border-radius: 20%;
+    text-align: center;
+    box-shadow: 5px 5px 5px rgba(109, 82, 82, 0.7);
+    max-width: 300px;
+}
+
+.listing img {
+    max-width: 169px;
+    height: 190px;
+    border-radius: 38%;
+}
+
+.listing h3 {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: rgb(32, 29, 29);
+}
+
+.listing p {
+    font-size: 16px;
+    color: #262630;
+}
+
+#works {
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.services-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.service-card {
+    width: 300px;
+    margin: 20px;
+    padding: 20px;
+    background-color: #b0b5e5;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.7);
+    text-align: center;
+}
+
+.service-card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+}
+
+.service-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.service-content p {
+    font-size: 1rem;
+    color: #1f1919;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+#testimonials {
+    background-color: #e3eddb;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.testimonial {
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 1%;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.7);
+}
+
+.testimonial p {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.testimonial cite {
+    font-weight: bold;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer p {
+    font-size: 14px;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.social-media {
+    margin-bottom: 10px;
+}
+
+.social-media a {
+    margin-right: 10px;
+}
+
+.social-media img {
+    width: 30px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.contact-info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.hamburger {
+    display: none; 
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #fff;
+    padding: 10px;
+    margin-right: 20px;
+}
+
+nav {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+}
+
+@media only screen and (min-width: 751px) {
+    
+    .hamburger {
+        display: none;
+    }
+
+    .show {
+        display: none;
+    }
+    
+    nav ul {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+     nav {
+        position:static;
+        margin-top: 20px;
+    } 
+}
+
+
+@media only screen and (max-width: 750px) {
+    
+    .hamburger {
+        display: inline-block;
+    }
+    
+    nav ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 50%; 
+        transform: translate(-50%, -50%);
+        background-color: #17151c;
+        padding: 20px;
+        top:70px;
+        text-align: center;
+    }
+
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+     .show {
+        display: flex !important; 
+        flex-direction: column;
+        margin-top: 15px;
+        margin-left: 28%;
+        background-color: #17151c;
+        height: max-content;
+        width: fit-content;
+    }
+
+    nav ul li {
+        display: block;
+        text-align: center;
+    } 
+}
+
+@media (min-width:351px){
+    .show {
+        left: 0%;
+    }
+}
+
+@media (max-width:500px){
+    .show {
+        margin-left: 10%;
+    }
+}
+

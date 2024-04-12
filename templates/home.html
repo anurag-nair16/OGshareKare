@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/mainhomesty.css" %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Donate Now</title>
+</head>
+<body>
+
+    <header>
+        <div class="m_container">
+            <div id="left">
+                <div>
+                    <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
+                </div>
+                <div id="lrig">
+                        <h1>ShareKare</h1>
+                        <h3>Connecting Surplus with Need</h3>
+                    </span>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn">{{request.user.first_name}} <span class="arrow">&#9660;</span></button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="{% url 'userprofile' %}">Profile</a>
+                    <a href="{% url 'campaign' %}">Active Campaigns</a>
+                    <a href="{% url 'campaign' %}">Create Listing</a>
+                </div>
+            </div>
+            
+            
+            <div class="vl"></div>
+            <div id="user1">
+                <a id ="link" href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      {% endfor %}
+    {% endif %}
+
+<div id="hero">
+    <div id="browseListing">
+        <h3 id="tag">BROWSE LISTINGS</h3>
+        <p id="br">Search items which You wish to donate??</p>
+        <div id="serch">
+            <form id="search-form" action="{% url 'home' %}" method="GET">
+                <input type="text" id="search-input" name ="q" placeholder="Search items you wish to donate..." value="{{ request.GET.q }}">
+                <button type="submit" id="search-btn">Search</button>
+            </form>
+        </div>
+        <div id="searchResults">
+            
+            <div class="donations-section">
+                <div id="headin">
+                    <div id="txthead">
+                        <h2>NGO requirements</h2>
+                    </div>
+                </div>
+                <br>
+                <h2>
+                    <div id="headitems">
+                        <div class="colhead">NGO Name</div>
+                        <div class="colhead">Product</div>
+                        <div class="colhead">Quantity</div>
+                        <div class="colhead">Size</div>
+                        <div class="colhead">Location</div>
+                        <div class="colhead">Distance</div>
+                    </div>
+                </h2>
+                {% for product in products %}
+                <a href="{% url 'ngo_donations' product.ngo.id product.id %}" id="links">
+                <div class="donation-item {% cycle 'even' 'odd' %}" id="hoverchange">
+                    <div class="column">
+                        {{ product.ngo.ngoname }}
+                    </div>
+                    <div class="column">
+                        {{ product.productName }}
+                    </div>
+                    <div class="column" id="quant">
+                        <p>{{ product.quantity }}</p>
+                    </div>
+                    <div class="column">
+                        <p>{{ product.size }}</p>
+                    </div>
+                    <div class="column">
+                        <p>{{ product.ngo.ngoprofile.location }}</p>
+                    </div>
+                    <div class="column">
+                        {% if product.ngo.distance %}
+                            <p>{{ product.ngo.distance }} km</p>
+                        {% else %}
+                            <p>Distance not available</p>
+                        {% endif %}
+                    </div>
+                </div>
+                </a>
+                {% empty %}
+                <p>No donations found.</p>
+                {% endfor %}
+            </div>
+            
+        </div>
+        <br><br>
+        Don't find Your search??
+        <a href="{% url 'campaign' %}">CREATE LISTINGS</a>
+    </div>
+</div>
+
+
+
+
+<h2 class="basic">Who we are and what we do</h2><br>
+<div class="container">
+    
+    <div class="box">
+        <div class="box-content flex">
+            <img src="{% static 'images/h1.jpg' %}" alt="Donation Process" class="img-left">
+            <div class="text">
+                <h3>Donation Process</h3>
+                <p class="para">
+                    The first step in our process is donating surplus items. 
+                    Users can easily contribute by dropping off their donations 
+                    at designated centers or scheduling a pickup through the platform. 
+                    This image illustrates the act of generosity and sets the stage for
+                    the redistribution journey.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <hr>
+
+    <div class="box">
+        <div class="box-content flex reverse" id="rev1">
+            <div class="text">
+                <h3>Sorting and Evaluation</h3>
+                <p class="para">Once donations are received, our dedicated 
+                    team of volunteers meticulously sorts and evaluates each
+                    item to ensure quality and suitability for redistribution. 
+                    This step highlights the transparency and accountability of
+                    our process, as items are carefully assessed before being
+                    redistributed to those in need.
+                </p>
+            </div>
+            <img src="{% static 'images/h2.jpg' %}" alt="Sorting and Evaluation" class="img-right">
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="box">
+        <div class="box-content flex">
+            <img src="{% static 'images/h3.jpg' %}" alt="Redistribution" class="img-left">
+            <div class="text">
+                <h3>Redistribution</h3>
+                <p class="para">
+                    After sorting, donated items are redistributed to 
+                    partner organizations and individuals in need within
+                    the community. This image showcases the efficient 
+                    redistribution process, where items are packaged and
+                    delivered to ensure timely access for recipients. 
+                    It emphasizes the platform's commitment to facilitating
+                    resource sharing and community empowerment.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="box">
+        <div class="box-content flex reverse" id="rev2">
+            <div class="text">
+                <h3>Community Impact</h3>
+                <p class="para">
+                    The final step in our process is witnessing the
+                    tangible impact of generosity within the community.
+                    This image captures the joy and gratitude of 
+                    recipients as they receive much-needed items, 
+                    reinforcing the positive ripple effect of donations.
+                    It underscores the importance of fostering a culture of
+                    giving and solidarity to create a more resilient and 
+                    compassionate society.
+                </p>
+            </div>
+            <img src="{% static 'images/h4.jpg' %}" alt="Community Impact" class="img-right">
+        </div>
+    </div>
+
+</div>
+
+
+
+<footer>
+    <div class="m_container" id="last">
+        <div class="footer-content">
+            <p>&copy; ShareKare Donation and Redistribution Web Platform</p>
+            <div class="social-media">
+                <a href="https://www.facebook.com/profile.php?id=100084735663295"><img src="{% static "images/facebook.png" %}" alt="Facebook"></a>
+                <a href="https://twitter.com/PushapRaina"><img src="{% static "images/twitter.png" %}" alt="Twitter"></a>
+                <a href="https://www.instagram.com/dope.music.official_?igsh=MWF5MTNlNGtqNmNxaA%3D%3D&utm_source=qr"><img src="{% static "images/instagram.jpg" %}" alt="Instagram"></a>
+            </div>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:anuragnair1607@gmail.com">anuragnair1607@gmail.com</a></p>
+                <p>Phone: 91673 14419</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>
+

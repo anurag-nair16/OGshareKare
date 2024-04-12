@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" id="logo" type="image/png" href="{% static "ShareKare.png" %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>ShareKare</title>
+    <link rel="stylesheet" href="{% static "css/signupstyle.css" %}">
+</head>
+<body>
+        <header>
+            <div class="container">
+                <div id="left">
+                    <div>
+                        <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
+                    </div>
+                    <div id="lrig">
+                            <h1>ShareKare</h1>
+                            <h3><b>Connecting Surplus with Need</b></h3>
+                        </span>
+                    </div>
+                </div>
+                <div id="right">
+                    <nav>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="#last">Contact Us</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="vl"></div>
+                <div id="user">
+                    <a href=""><img id = "ulogo" src="https://t3.ftcdn.net/jpg/04/41/88/38/360_F_441883842_S9GeDmhAVkMKCqHzkbHRg7HOStAvoSKq.jpg" alt="user">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="cont">
+                    <div id="login">
+                        <h1><b>Create Account</b></h1><br>
+                    </div>
+                        <div id="fullname">
+                            <label for="username">Username</label><br>
+                            {% comment %} <input type="text" name="username" id="fullnameInput" required /> {% endcomment %}
+                            {{form.username}}
+                            <br>
+                        </div>
+                        <div id="fullnames">
+                            <label for="username">Fullname</label><br>
+                            {{form.first_name}}
+                            <br>
+                        </div>
+                        <div id="email">
+                            <label for="email">Email</label><br>
+                            {% comment %} <input type="email" name="email" id="emailInput" required /> {% endcomment %}
+                            {{form.email}}<br>
+                        </div>
+                        <label for="location">Enter Location:</label>
+                        {{ donor_form.location }}
+                        <div id="password">
+                            <label for="password1">Password</label><br>
+                            {% comment %} <input type="password" name="password" required /> {% endcomment %}
+                            {{form.password1}}<br>
+                        </div>
+                        <div id="password2">
+                            <label for="password2">Password</label><br>
+                            {% comment %} <input type="password" name="password" required /> {% endcomment %}
+                            {{form.password2}}<br><br>
+                        </div>
+                        {{form.errors}}
+                    <div id="submit">
+                        <button>Create Account</button>
+                    </div> 
+                    <div class="signin" id="sgn">
+                        Already have an account? <a href="{% url 'login' %}">Sign In</a>
+                    </div>
+                    OR
+                    <div class="signin">
+                        Signup as a NGO <a href="{% url 'register_ngo' %}">here</a>
+                    </div>
+                </div>
+            </form> 
+
+            
+    <footer>
+        <div class="container" id="last">
+            <div class="footer-content">
+                <p>&copy; ShareKare Donation and Redistribution Web Platform</p>
+                <div class="social-media">
+                    <a href="https://www.facebook.com/profile.php?id=100084735663295" ><img src="{% static "images/facebook.png" %}" alt="Facebook"></a>
+                    <a href="https://twitter.com/PushapRaina"><img src="{% static "images/twitter.png" %}" alt="Twitter"></a>
+                    <a href="https://www.instagram.com/dope.music.official_?igsh=MWF5MTNlNGtqNmNxaA%3D%3D&utm_source=qr"><img src="{% static "images/instagram.jpg" %}" alt="Instagram"></a>
+                    
+                </div>
+                <div class="contact-info">
+                    <p>Email: <a href="mailto:anuragnair1607@gmail.com">anuragnair1607@gmail.com</a></p>
+                    <p>Phone: 91673 14419</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

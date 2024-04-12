@@ -1,0 +1,161 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #f4e8e8;
+}
+
+#main {
+    display: flex;
+    gap: 20%; 
+}
+#left h1 {
+    font-size: 1.7rem;
+}
+
+#left h3 {
+    font-size: 1.2rem;
+}
+
+#lrig {
+    margin-top: 2%;
+}
+
+.m_container {
+    top: 0;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2%
+}
+
+#logo {
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+} 
+
+#left {
+    display: flex;
+    flex: 1;
+    gap: 5%;
+}
+
+#right {
+    flex: 1;
+    text-align: right;
+    margin-top: 2%;
+}
+
+.vl {
+    border-left: 3px solid rgb(242, 183, 183);
+    height: auto;
+    margin-bottom: 1%;
+}
+
+#user {
+    margin-right: 1%;
+    margin-top: 1%;
+}
+
+#ulogo {
+    height: 50px;
+    width: auto;
+    border-radius: 50%;
+}
+
+header {
+    background-color: #17151c;
+    color: #fff;
+    padding: 20px 0;
+    top: 0;
+    height: fit-content;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+} 
+
+ nav ul li a {
+    color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+    color: #ee8b8b;
+}
+
+#listDon {
+    margin: 2%;
+    box-shadow: 7px 10px 10px;
+    background-color: rgb(240, 211, 211);
+    border-radius: 8px;
+    font-size: 1.3rem;
+    padding: 1%;
+}
+
+#headinglist {
+    margin-top: 1%;
+    background-color: rgb(101, 207, 101);
+    text-align: center;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+footer p {
+    font-size: 14px;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.social-media {
+    margin-bottom: 10px;
+}
+
+.social-media a {
+    margin-right: 10px;
+}
+
+.social-media img {
+    width: 30px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.contact-info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+html {
+    scroll-behavior: smooth;
+}

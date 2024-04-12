@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Donations</title>
+    <link rel="stylesheet" href="{% static "css/user_dons.css" %}"/>
+</head>
+<body>
+
+    <header>
+        <div class="m_container">
+            <div id="left">
+                <div>
+                    <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
+                </div>
+                <div id="lrig">
+                        <h1>ShareKare</h1>
+                        <h3>Connecting Surplus with Need</h3>
+                    </span>
+                </div>
+            </div>
+            <div id="right">
+                <nav>
+                    <ul>
+                        <div id="profile"><a href="{% url 'ngo_dashboard' %}" id="linkprofile">Home</a></div>
+                    </ul>
+                </nav>
+            </div>
+            <div class="vl"></div>
+            <div id="user1">
+                <a id ="link" href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- NGO Details Section -->
+    <div class="ngo-details-section">
+        <div class="ngo-image">
+            <img id="userimg" src="{% static "images/userlogo.png" %}" alt="{{ ngo.ngoname }} Image">
+        </div>
+        <div class="ngo-information">
+            <h2>{{ ngo.ngoname }}</h2>
+            <p><strong>Name: </strong>{{ donor.first_name }}</p>
+            <p><strong>Username:</strong> {{ donor.username }}</p>
+            <p><strong>Email: </strong>{{ donor.email }}</p>
+        </div>
+    </div>
+
+    <div class="donations-section">
+        <div id="headin"><div id="txthead"><h2>Donations listed by {{ donor.username }} </h2></div></div>
+    </div>
+    <br>
+
+    <div id="grandparent">
+
+        <div id="parentleft">
+            <div id="hihgdon">
+                <a href="{{ donation.product_images.url }}" target="_blank">
+                <img src="{{ product_high.product_images.url }}" alt="{{ donation.other_products }}" class="donation-image"><br>
+                </a>
+                <h2> {{product_high.other_products}}</h2>
+                <p><b>Quantity:  </b>{{product_high.product_quantity}}</p><br>        
+            </div>  
+        </div>
+
+        {% for donation in donations %}
+        {% if donation.id != product_high.id %}
+            <div class="donation-item1 {% cycle 'even' 'odd' %}" id="ditem">
+                <div class="column" id="quant">
+                <a href="{{ donation.product_images.url }}" target="_blank">
+                    <img src="{{ donation.product_images.url }}" alt="{{ donation.other_products }}" class="donation-image">  
+                </a>         
+                </div><br>
+                <div class="column">
+                    <h2> {{ donation.other_products }}</h2>
+                </div>
+                <div class="column" id="quant">
+                    <p><b>Quantity:{{ donation.product_quantity }}</b></p>
+                </div>
+            </div>
+            
+        {% endif %}
+
+        {% empty %}
+        <br>
+        <p><strong>No donations listed.</strong></p>
+        {% endfor %}
+</div>
+</body>
+</html>
