@@ -15,10 +15,8 @@ def home(request):
 
 def real_campaigns(request):
     camp = CreateCampaign.objects.all()
-    prof = NGOProfile.objects.filter(ngo=campaign.ngo)
     context = {
         'camp':camp,
-        'prof':profile
     }
     
     return render(request,'realcampaigns.html',context)
