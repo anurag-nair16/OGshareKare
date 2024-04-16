@@ -17,6 +17,7 @@ urlpatterns = [
     path('ngo_details/', views.profile, name='ngo_details'),
     path('ngo_profile/', views.ngo_profile, name='ngo_profile'),
     path('userprofile/', views.user_profile, name='userprofile'),
+    path('real_campaigns/', views.real_campaigns, name='real_campaigns'),
     path('create_donation/', views.create_donation, name='create_donation'),
     path('create_campaign/', views.create_campaign, name='create_campaign'),
     path('ngo_donations/<int:ngo_id>/<int:don_id>/', views.ngo_donations, name='ngo_donations'),

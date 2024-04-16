@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Page</title>
+    <link rel="stylesheet" href="{% static "css/realcampsty.css" %}">
+</head>
+<body>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" placeholder="Search...">
+            <button>Search</button>
+        </div>
+        <div class="campaign-container">
+            {% for campaign in camp %}
+            <div class="campaign-box">
+                <div class="campaign">
+                    <div class="campaign-image">
+                        <img src="{{ campaign.ngo.ngoprofile.image1.url }}" alt="{{ campaign.title }}">
+                    </div>
+                    <div class="campaign-info">
+                        <h2>{{ campaign.title }}</h2>
+                        <p>{{ campaign.description }}</p>
+                        <p>Start Date: {{ campaign.start_date }}</p>
+                        <p>End Date: {{ campaign.end_date }}</p>
+                        <p>Location: {{ campaign.ngo.ngoprofile.location }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+    
+</body>
+</html>

@@ -25,14 +25,16 @@
                 </div>
             </div>
             <div class="dropdown">
-                <button onclick="myFunction()" class="dropbtn">{{request.user.first_name}} <span class="arrow">&#9660;</span></button>
-                <div id="myDropdown" class="dropdown-content">
-                    <a href="{% url 'userprofile' %}">Profile</a>
-                    <a href="{% url 'campaign' %}">Active Campaigns</a>
-                    <a href="{% url 'campaign' %}">Create Listing</a>
-                </div>
+            <br>
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ request.user.first_name }} <span class="arrow"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="{% url 'userprofile' %}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'real_campaigns' %}">Campaigns</a></li>
+                    <li><a class="dropdown-item" href="{% url 'campaign' %}">Create Listing</a></li>
+                </ul>
             </div>
-            
             
             <div class="vl"></div>
             <div id="user1">
@@ -76,7 +78,7 @@
                         <div class="colhead">Quantity</div>
                         <div class="colhead">Size</div>
                         <div class="colhead">Location</div>
-                        <div class="colhead">Distance</div>
+                        {% comment %} <div class="colhead">Distance</div> {% endcomment %}
                     </div>
                 </h2>
                 {% for product in products %}
@@ -97,13 +99,13 @@
                     <div class="column">
                         <p>{{ product.ngo.ngoprofile.location }}</p>
                     </div>
-                    <div class="column">
+                    {% comment %} <div class="column">
                         {% if product.ngo.distance %}
                             <p>{{ product.ngo.distance }} km</p>
                         {% else %}
                             <p>Distance not available</p>
                         {% endif %}
-                    </div>
+                    </div> {% endcomment %}
                 </div>
                 </a>
                 {% empty %}
@@ -117,9 +119,6 @@
         <a href="{% url 'campaign' %}">CREATE LISTINGS</a>
     </div>
 </div>
-
-
-
 
 <h2 class="basic">Who we are and what we do</h2><br>
 <div class="container">

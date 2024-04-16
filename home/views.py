@@ -13,7 +13,31 @@ from django.core.cache import cache
 def home(request):
     return render(request,'index.html',{})
 
+def real_campaigns(request):
+    camp = CreateCampaign.objects.all()
+    prof = NGOProfile.objects.filter(ngo=campaign.ngo)
+    context = {
+        'camp':camp,
+        'prof':profile
+    }
+    
+    return render(request,'realcampaigns.html',context)
+
 def create_donation(request):
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.ngo_id = request.user.ngo.id
+            product.save()
+            messages.success(request, 'Product succesfully added ')
+            return redirect('ngo_dashboard')  
+        else:
+            messages.error(request,'There was an issue. Please try again')
+    else:
+        form = ProductForm()
+
     return render(request,'create_donation.html',{})
 
 @login_required
@@ -46,18 +70,7 @@ def ngo_dash(request):
             return redirect('home') 
 
     profile = NGO.objects.get(user=request.user)
-    if request.method == 'POST':
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.ngo_id = request.user.ngo.id
-            product.save()
-            messages.success(request, 'Product succesfully added ')
-            return redirect('ngo_dashboard')  
-        else:
-            messages.error(request,'There was an issue. Please try again')
-    else:
-        form = ProductForm()
+    
 
     query = request.GET.get('q')
     donation = Donation.objects.filter(other_products__icontains=query) if query else Donation.objects.all()
@@ -78,12 +91,20 @@ def ngo_donations(request, ngo_id, don_id):
     
     product_high = Product.objects.get(id=don_id)
 
+    user = ngo.user
+
+    active_campaigns = CreateCampaign.objects.filter(ngo=user, start_date__lte=timezone.now(), end_date__gte=timezone.now())
+    
+    upcoming_campaigns = CreateCampaign.objects.filter(ngo=user, start_date__gt=timezone.now())
+
     context = {
         'ngo': ngo,
         'donations': donations,
-        'product_high': product_high
+        'product_high': product_high,
+        'active_campaigns': active_campaigns,
+        'upcoming_campaigns': upcoming_campaigns
     }
-    
+
     return render(request, 'ngo_donations.html', context)
 
 
@@ -106,58 +127,55 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     r = 6371  # Radius of the earth in kilometers
     return round(r * c, 2)
 
+
 def main_home(request):
     query = request.GET.get('q')
-    
-    if query:
-        products = Product.objects.filter(productName__icontains=query)
-    else:
-        products = Product.objects.all()
+    products = Product.objects.filter(productName__icontains=query) if query else Product.objects.all()
+
+    nearest_campaigns = []
 
     if request.user.is_authenticated:
         try:
             profile = Donor.objects.get(user=request.user)
             user_location_name = profile.location
-            user_lat, user_lon = get_lat_lon_from_location(user_location_name)
-
-            print(f"User location: {user_location_name}, Lat: {user_lat}, Lon: {user_lon}")
+            if not profile.latitude and not profile.longitude:
+                user_lat, user_lon = get_lat_lon_from_location(user_location_name)
+            else:
+                user_lat=profile.latitude
+                user_lon=profile.longitude
 
             if user_lat and user_lon:
-                # Check if distances are cached
-                cache_key = f"user_{request.user.id}_distances"
-                distances = cache.get(cache_key, {})
+                profile.latitude = user_lat
+                profile.longitude = user_lon
+                profile.save()
 
-                if not distances:
-                    print("Calculating distances...")
-                    for product in products:
-                        ngo_location = product.ngo.ngoprofile.location
-                        ngo_lat, ngo_lon = get_lat_lon_from_location(ngo_location)
-
-                        if ngo_lat and ngo_lon:
-                            distance = haversine_distance(user_lat, user_lon, ngo_lat, ngo_lon)
-                            distances[product.id] = distance
-
-                    # Cache the distances for 24 hours
-                    cache.set(cache_key, distances, 24*60*60)
-
-                # Assign the cached distances to the products
                 for product in products:
-                    if product.id in distances:
-                        product.ngo.distance = distances[product.id]
+                    ngo_location = product.ngo.ngoprofile.location
+                    if not product.ngo.ngoprofile.latitude and not product.ngo.ngoprofile.longitude:
+                        ngo_lat, ngo_lon = get_lat_lon_from_location(ngo_location)
+                    else:
+                        ngo_lat=product.ngo.ngoprofile.latitude
+                        ngo_lon=product.ngo.ngoprofile.longitude
+                    if ngo_lat and ngo_lon:
+                        try:
+                            product.ngo.ngoprofile.latitude = ngo_lat
+                            product.ngo.ngoprofile.longitude = ngo_lon
+                            product.ngo.ngoprofile.save()
+                        except Exception as e:
+                            print(f"Error calculating distance: {e}")
 
-                products = sorted(products, key=lambda x: x.ngo.distance if hasattr(x.ngo, 'distance') else float('inf'))
-                print(f"Sorted products: {[product.ngo.distance for product in products if hasattr(product.ngo, 'distance')]}")
+                products = sorted(products, key=lambda x: haversine_distance(user_lat, user_lon, x.ngo.ngoprofile.latitude, x.ngo.ngoprofile.longitude))
 
-                context = {'products': products}
+                context = {'products': products, 'nearest_campaigns': nearest_campaigns}
                 return render(request, 'home.html', context)
             
         except Donor.DoesNotExist:
-            print("Donor profile not found for the authenticated user.")
             pass
+        except Exception as e:
+            print(f"Error fetching user location: {e}")
 
-    context = {'products': products}
+    context = {'products': products, 'nearest_campaigns': nearest_campaigns}
     return render(request, 'home.html', context)
-
 
 
 def signup(request):

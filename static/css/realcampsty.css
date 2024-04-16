@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    padding: 10px;
+    width: 60%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-box button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.campaign-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow-y: auto;
+    max-height: 600px;
+    
+    background-color: #fff;
+    margin-bottom: 20px; /* Add margin bottom for spacing between campaign boxes */
+    margin-top:30px;
+}
+
+.campaign-box {
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.campaign {
+    display: flex;
+    align-items: center;
+}
+
+.campaign-image {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.campaign-image img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.campaign-info {
+    flex: 2;
+    margin-left: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    .search-box input {
+        width: 100%;
+    }
+}

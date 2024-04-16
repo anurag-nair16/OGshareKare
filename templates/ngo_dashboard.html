@@ -23,13 +23,19 @@
                     </span>
                 </div>
             </div>
-            <div id="right">
-                <nav>
-                    <ul>
-                        <div id="profile"><a href="{% url 'ngo_profile' %}" id="linkprofile">Profile</a></div>
-                    </ul>
-                </nav>
-            </div>
+           
+                <div class="dropdown">
+                    <br>
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ ngoname }} <span class="arrow"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="{% url 'ngo_profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'create_campaign' %}">Launch Campaigns</a></li>
+                            <li><a class="dropdown-item" href="{% url 'create_donation' %}">Create Listing</a></li>
+                        </ul>
+                    </div>
+            
             <div class="vl"></div>
             <div id="user1">
                 <a id ="link" href="{% url 'logout' %}">Logout</a>
