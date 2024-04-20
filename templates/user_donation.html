@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NGO Donations</title>
-    <link rel="stylesheet" href="{% static "css/user_dons.css" %}"/>
+    <link rel="stylesheet" href="{% static "css/user_donate.css" %}"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -30,8 +32,9 @@
             </div>
             <div class="vl"></div>
             <div id="user1">
-                <a id ="link" href="{% url 'logout' %}">Logout</a>
+                <a id ="link" href="{% url 'logout' %}"><button class="btn btn-danger" onclick="logout()">Logout</button></a>
             </div>
+            
         </div>
     </header>
 
@@ -42,9 +45,11 @@
         </div>
         <div class="ngo-information">
             <h2>{{ ngo.ngoname }}</h2>
-            <p><strong>Name: </strong>{{ donor.first_name }}</p>
-            <p><strong>Username:</strong> {{ donor.username }}</p>
-            <p><strong>Email: </strong>{{ donor.email }}</p>
+            <p><strong>Name: </strong>{{ userr.first_name }}</p>
+            <p><strong>Username:</strong> {{ userr.username }}</p>
+            <p><strong>Email: </strong>{{ userr.email }}</p>
+            <p><strong>Email: </strong>{{ donor.location }}</p>
+            
         </div>
     </div>
 
@@ -88,5 +93,7 @@
         <p><strong>No donations listed.</strong></p>
         {% endfor %}
 </div>
+
+    <script src={% static "js/script.js" %}></script>
 </body>
 </html>

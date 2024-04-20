@@ -33,7 +33,7 @@
             </div>
             <div class="vl"></div>
             <div id="user1">
-                <a id ="link" href="{% url 'logout' %}">Logout</a>
+                <a id ="link" href="{% url 'logout' %}"><button class="btn btn-danger" onclick="logout()">Logout</button></a>
             </div>
         </div>
     </header>
@@ -47,6 +47,7 @@
             <p><strong>Name: </strong>{{ request.user.first_name }}</p>
             <p><strong>Username: </strong>{{ request.user.username }}</p>
             <p><strong>Email: </strong>{{ request.user.email }}</p>
+            <p><strong>Location: </strong>{{ request.user.donor.location }}</p>
         
         </div>
         
@@ -85,6 +86,9 @@
         <p><strong>No donations made yet.</strong></p>
         {% endfor %}
     </div>
+
+    <script src={% static "js/script.js" %}></script>
+
     
     
 </body>

@@ -7,18 +7,117 @@ from django.contrib.auth import authenticate, login, logout
 from .models import User, Donation, NGO, NGOProfile, Product, CreateCampaign, Donor
 from django.utils import timezone
 import math
-from django.conf import settings
-from django.core.cache import cache
+from itertools import permutations
+from django.http import JsonResponse
+
+from django.shortcuts import render
+
+def collect_donations(request):
+    if request.method == 'POST':
+        selected_donation_ids = request.POST.getlist('selected_donations')
+        selected_donations = Donation.objects.filter(id__in=selected_donation_ids)
+
+        
+        if selected_donations.exists():
+            # Get donor locations
+            donor_locations = [(donation.user.donor.latitude, donation.user.donor.longitude) 
+                               for donation in selected_donations if donation.user.donor.latitude and donation.user.donor.longitude]
+            
+            # Get NGO location
+            ngo_location = (request.user.ngo.ngoprofile.latitude, request.user.ngo.ngoprofile.longitude)
+            print(ngo_location)
+            # Solve TSP
+            optimal_route, total_distance = solve_tsp(ngo_location, donor_locations)
+
+            location_names=[]
+            for lat,lon in optimal_route:
+                location = Donor.objects.filter(latitude=lat, longitude=lon).first()
+                location_names.append(location.location)
+
+
+            print(optimal_route)
+            print(location_names)
+
+
+            
+            context = {
+                'location_names':location_names,
+                'optimal_route': optimal_route,
+                'total_distance': total_distance,
+            }
+            
+            return render(request, 'optimized_route.html', context)
+    
+    donations = Donation.objects.all()
+
+    context = {
+        'donations': donations,
+    }
+
+    return render(request, 'collect_donations.html', context)
+
+def solve_tsp(start, locations):
+    min_distance = float('inf')
+    optimal_route = None
+
+    for permutation in permutations(locations):
+        distance = 0
+        current_location = start
+
+        for loc in permutation:
+            distance += haversine_distance(current_location[0], current_location[1], loc[0], loc[1])
+            current_location = loc
+
+        distance += haversine_distance(current_location[0], current_location[1], start[0], start[1])
+
+        if distance < min_distance:
+            min_distance = distance
+            optimal_route = permutation
+
+    return optimal_route, round(min_distance, 2)
+
+def get_lat_lon_from_location(location_name):
+    url = f"https://nominatim.openstreetmap.org/search?format=json&q={location_name}, India"
+    response = requests.get(url)
+    data = response.json()
+    
+    if data:
+        return float(data[0]['lat']), float(data[0]['lon'])
+    else:
+        return None, None
+
+
+def haversine_distance(lat1, lon1, lat2, lon2):
+    lon1, lat1, lon2, lat2 = map(math.radians, [lon1, lat1, lon2, lat2])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    r = 6371  # Radius of the earth in kilometers
+    return round(r * c, 2)
+
 
 def home(request):
     return render(request,'index.html',{})
 
 def real_campaigns(request):
-    camp = CreateCampaign.objects.all()
-    context = {
-        'camp':camp,
-    }
+    camp = CreateCampaign.objects.filter(end_date__gte=timezone.now())
     
+    ngo_profiles = []
+    
+    for campaign in camp:
+        try:
+            ngo = NGO.objects.get(user=campaign.ngo)
+            ngo_profile = NGOProfile.objects.get(ngo=ngo)
+            ngo_profiles.append(ngo_profile)
+        except NGOProfile.DoesNotExist:
+            pass
+    
+    context = {
+        'camp': camp,
+        'ngo_profiles': ngo_profiles,
+    }
+
     return render(request,'realcampaigns.html',context)
 
 def create_donation(request):
@@ -40,12 +139,13 @@ def create_donation(request):
 
 @login_required
 def user_donation(request, user_id, product_id):
-    donor = User.objects.get(id=user_id)
-    donations = Donation.objects.filter(user_id=donor)
-    
+    userr = User.objects.get(id=user_id)
+    donor = Donor.objects.get(user=userr)
+    donations = Donation.objects.filter(user_id=userr)
     product_high = Donation.objects.get(id=product_id)
     
     context = {
+        'userr':userr,
         'donor': donor,
         'donations': donations,
         'product_high': product_high
@@ -106,26 +206,6 @@ def ngo_donations(request, ngo_id, don_id):
     return render(request, 'ngo_donations.html', context)
 
 
-def get_lat_lon_from_location(location_name):
-    url = f"https://nominatim.openstreetmap.org/search?format=json&q={location_name}, India"
-    response = requests.get(url)
-    data = response.json()
-    
-    if data:
-        return float(data[0]['lat']), float(data[0]['lon'])
-    else:
-        return None, None
-
-def haversine_distance(lat1, lon1, lat2, lon2):
-    lon1, lat1, lon2, lat2 = map(math.radians, [lon1, lat1, lon2, lat2])
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
-    r = 6371  # Radius of the earth in kilometers
-    return round(r * c, 2)
-
-
 def main_home(request):
     query = request.GET.get('q')
     products = Product.objects.filter(productName__icontains=query) if query else Product.objects.all()
@@ -178,23 +258,27 @@ def main_home(request):
 
 def signup(request):
     form = CreateUserForm()
-    donor_form = DonorForm()  # Add DonorForm instance
+    donor_form = DonorForm() 
 
     if request.user.is_authenticated:
         return redirect('campaign')
     else:
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
-            donor_form = DonorForm(request.POST)  # Handle DonorForm
+            donor_form = DonorForm(request.POST)  
             if form.is_valid() and donor_form.is_valid():
                 user = form.save()
                 donor = donor_form.save(commit=False)
                 donor.user = user
+                location_name = donor_form.cleaned_data['location']
+                lat, lon = get_lat_lon_from_location(location_name)
+                donor.latitude = lat
+                donor.longitude = lon
                 donor.save()
                 messages.success(request, 'Account created successfully')
                 return redirect('login')
         
-        context = {'form': form, 'donor_form': donor_form}  # Add donor_form to context
+        context = {'form': form, 'donor_form': donor_form}  
         return render(request, 'signup.html', context)
     
 def joinus(request):
@@ -203,7 +287,7 @@ def joinus(request):
         if form.is_valid():
             fullname=request.POST['fullname']
             form.save()
-            messages.success(request,(f'Thank you {fullname}. Your response has been recorded. We will contact you soon!'))
+            messages.success(request,(f'Thank you {fullname}. Your response has been recorded. NGOs will contact you when required!'))
             return redirect('joinus')
         else:
             form = VolunteerForm()
@@ -232,11 +316,6 @@ def campaign(request):
             return render(request, 'campaign.html', {'form': form, 'user_donations': user_donations, 'form_errors': form_errors})
 
     return render(request, 'campaign.html', {'form': form, 'user_donations': user_donations})
-
-def logout_view(request):
-    logout(request)
-    messages.info(request, "You have been logged out.")
-    return redirect('login')  
 
 def register_ngo(request):
     if request.method == 'POST':
@@ -300,6 +379,10 @@ def profile(request):
             if form.is_valid():
                 profile = form.save(commit=False)
                 profile.ngo = ngo
+                location_name = form.cleaned_data['location']
+                lat, lon = get_lat_lon_from_location(location_name)
+                profile.latitude = lat
+                profile.longitude = lon
                 profile.save()
                 return redirect('ngo_dashboard')  
             else:
@@ -347,3 +430,10 @@ def create_campaign(request):
         form = CampaignForm()
     
     return render(request, 'create_campaign.html', {'form': form})
+
+
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You have been logged out.")
+    return redirect('login')  

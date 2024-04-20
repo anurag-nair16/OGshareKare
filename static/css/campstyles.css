@@ -59,12 +59,6 @@ body{
     margin-bottom: 1%;
 }
 
-#user1 {
-    margin-right: 1%;
-    margin-top: 2%;
-    width: fit-content;
-    height: fit-content;
-}
 
 #link {
     color: white;
@@ -349,16 +343,9 @@ html {
 #user1 {
     margin-right: 1%;
     margin-top: 2.2%;
-    width: 69px;
-    height: 35px;
-    text-align: center;
-    padding-top: 2px;
-    border-radius: 10%;
-    background-color: red;
 }
 
-
-#link {
-    color: white;
-    font-size: 1.2rem;
+#btst{
+    width: 75.79px;
+    height: 37.6px;
 }

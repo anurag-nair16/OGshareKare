@@ -1,0 +1,10 @@
+
+{% block content %}
+    <h1>Optimized Route</h1>
+    <p>Total distance: {{ total_distance }} km</p>
+    <ol>
+        {% for loc in location_names %}
+            <li>{{ loc }}</li>
+        {% endfor %}
+    </ol>
+{% endblock %}

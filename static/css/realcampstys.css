@@ -1,0 +1,212 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+
+#main {
+    display: flex;
+    gap: 20%; 
+}
+#left h1 {
+    font-size: 1.7rem;
+}
+
+#left h3 {
+    font-size: 1.2rem;
+}
+
+#lrig {
+    margin-top: 2%;
+}
+
+.m_container {
+    top: 0;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2%
+}
+
+#logo {
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+} 
+
+#left {
+    display: flex;
+    flex: 1;
+    gap: 5%;
+}
+
+#right {
+    flex: 1;
+    text-align: right;
+    margin-top: 2%;
+}
+
+.vl {
+    border-left: 3px solid rgb(242, 183, 183);
+    height: auto;
+    margin-bottom: 1%;
+}
+
+#user1 {
+    margin-right: 1%;
+    margin-top: 2%;
+    width: fit-content;
+    height: fit-content;
+}
+
+#link {
+    color: white;
+    font-size: 1.2rem;
+}
+
+#link:hover {
+    color: #ff6b6b;
+}
+
+#ulogo {
+    height: 50px;
+    width: auto;
+    border-radius: 50%;
+}
+
+header {
+    background-color: #17151c;
+    color: #fff;
+    padding: 20px 0;
+    top: 0;
+    height: fit-content;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+} 
+
+#profile {
+    font-size: 23px;
+}
+
+#linkprofile{
+    text-decoration:none;
+    color: white;
+}
+
+#linkprofile:hover{
+    color: rgb(244, 78, 78);
+}
+
+#user1 {
+    margin-right: 1%;
+    margin-top: 1.8%;
+    width: 69px;
+    height: 35px;
+    text-align: center;
+    padding-top: 2px;
+    border-radius: 10%;
+}
+
+
+#link {
+    color: white;
+    font-size: 1.2rem;
+}
+
+ nav ul li a {
+    color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+    color: #ee8b8b;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    padding: 10px;
+    width: 60%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-box button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.campaign-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow-y: auto;
+    max-height: 600px;
+    
+    background-color: #fff;
+    margin-bottom: 20px; /* Add margin bottom for spacing between campaign boxes */
+    margin-top:30px;
+}
+
+.campaign-box {
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.campaign {
+    display: flex;
+    align-items: center;
+}
+
+.campaign-image {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.campaign-image img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.campaign-info {
+    flex: 2;
+    margin-left: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    .search-box input {
+        width: 100%;
+    }
+}

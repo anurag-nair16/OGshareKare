@@ -5,41 +5,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static "css/ngodetstyles.css" %}"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>ShareKare</title>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Congrats! You are almost there.</h2>
-        {% if form_errors %}
-            <ul>
-                {% for field, errors in form_errors.items %}
-                    {% for error in errors %}
-                        <li>{{ field }}: {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <form method="POST" action="{% url 'ngo_details' %}" enctype="multipart/form-data" id="ngoForm">
-            {% csrf_token %}
-            
-            <label for="image1">Upload photos of your NGO:</label>
-            <input type="file" id="myfile" name="image1" accept="image/*">
-        
-            <label for="location">Enter NGO location:</label>
-            <input type="text" id="location" name="location" placeholder="Enter NGO Location" required>
-        
-            <label for="address">Enter NGO address:</label>
-            <input type="text" id="address" name="address" placeholder="Enter NGO Address" required>
-        
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" placeholder="Enter NGO Description" required></textarea>
-        
-            <input type="submit" value="Submit">
-        </form>
-        
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h2 class="text-center">Congrats! You are almost there.</h2>
+                {% if form_errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for field, errors in form_errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ field }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <form method="POST" action="{% url 'ngo_details' %}" enctype="multipart/form-data" id="ngoForm">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="image1">Upload photos of your NGO:</label>
+                        <input type="file" class="form-control" id="image1" name="image1" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Enter NGO location:</label>
+                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter NGO Location" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Enter NGO address:</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter NGO Address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea class="form-control" id="description" name="description" placeholder="Enter NGO Description" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
+    
+    <script src={% static "js/script.js" %}></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    
 </body>
 </html>

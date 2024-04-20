@@ -20,6 +20,7 @@ urlpatterns = [
     path('real_campaigns/', views.real_campaigns, name='real_campaigns'),
     path('create_donation/', views.create_donation, name='create_donation'),
     path('create_campaign/', views.create_campaign, name='create_campaign'),
+    path('collect_donations/', views.collect_donations, name='collect_donations'),
     path('ngo_donations/<int:ngo_id>/<int:don_id>/', views.ngo_donations, name='ngo_donations'),
     path('user_donation/<int:user_id>/<int:product_id>/', views.user_donation, name='user_donation'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

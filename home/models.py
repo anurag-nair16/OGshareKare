@@ -12,13 +12,13 @@ class Donor(models.Model):
 
 class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    other_products = models.CharField(max_length=100)
+    other_products = models.TextField(max_length=100)
     phone_number = models.CharField(max_length=15)
     product_quantity = models.IntegerField()
     product_images = models.ImageField(upload_to="images/")
 
     def __str__(self):
-        return f"Donation by {self.contact_name}"
+        return f"Donation by {self.user.first_name}"
 
 class Volunteer(models.Model):
     fullname = models.CharField(max_length=100)
