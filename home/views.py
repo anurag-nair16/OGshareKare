@@ -4,13 +4,36 @@ from .forms import CreateUserForm,DonationForm,VolunteerForm,NGORegistrationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .models import User, Donation, NGO, NGOProfile, Product, CreateCampaign, Donor
+from .models import User, Donation, NGO, NGOProfile, Product, CreateCampaign, Donor, Volunteer
 from django.utils import timezone
 import math
 from itertools import permutations
 from django.http import JsonResponse
 
 from django.shortcuts import render
+
+def view_volunteers(request):
+    volunteers = Volunteer.objects.all()
+
+    availability = request.GET.get('availability')
+    print(availability)
+    if availability:
+        if availability != 'Both':
+            volunteers =volunteers = volunteers.filter(availability=availability) | volunteers.filter(availability='Both')
+        else:    
+            volunteers = volunteers.filter(availability=availability)
+
+    interests = request.GET.get('interests')
+    if interests:
+        volunteers = volunteers.filter(interests__icontains=interests)
+
+    context = {
+        'volunteers': volunteers,
+        'ngoname': request.user.ngo.ngoname 
+    }
+
+    return render(request, 'view_volunteers.html', context)
+
 
 def collect_donations(request):
     if request.method == 'POST':
@@ -286,14 +309,17 @@ def joinus(request):
         form = VolunteerForm(request.POST or None)
         if form.is_valid():
             fullname=request.POST['fullname']
+            print(fullname)
             form.save()
             messages.success(request,(f'Thank you {fullname}. Your response has been recorded. NGOs will contact you when required!'))
             return redirect('joinus')
         else:
-            form = VolunteerForm()
+            form_errors = form.errors
             messages.error(request, 'There was an error processing your form.')
+            return render(request,'joinus.html',{'form': form, 'form_errors': form_errors})
     else:
-        return render(request,'joinus.html',{})
+        form = VolunteerForm()
+        return render(request,'joinus.html',{'form': form})
 
 
 @login_required(login_url='login')

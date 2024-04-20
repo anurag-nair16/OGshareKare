@@ -12,6 +12,7 @@ urlpatterns = [
     path('campaign/', views.campaign, name="campaign"),
     path('home/', views.main_home, name="home"),
     path('joinus/', views.joinus, name="joinus"),
+    path('view_volunteers/', views.view_volunteers, name='view_volunteers'),
     path('register_ngo/', views.register_ngo, name='register_ngo'),
     path('ngo_dashboard/', views.ngo_dash, name='ngo_dashboard'),
     path('ngo_details/', views.profile, name='ngo_details'),

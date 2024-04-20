@@ -1,41 +1,14 @@
-<!DOCTYPE html>
+{% extends 'base2.html' %}
 {% load static %}
-<html lang="en">
+{% block title %}
+    Donate Now
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NGO Profile</title>
-    <link rel="stylesheet" href="{% static "css/ngo_prof.css" %}"/>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/ngo_prof.css" %}">
+{% endblock %}
 
-<body>
-    <header>
-        <div class="m_container">
-            <div id="left">
-                <div>
-                    <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
-                </div>
-                <div id="lrig">
-                        <h1>ShareKare</h1>
-                        <h3>Connecting Surplus with Need</h3>
-                    </span>
-                </div>
-            </div>
-            <div id="right">
-                <nav>
-                    <ul>
-                        <div id="profile"><a href="{% url 'ngo_dashboard' %}" id="linkprofile">Home</a></div>
-                    </ul>
-                </nav>
-            </div>
-            <div class="vl"></div>
-            <div id="user1">
-                <a id ="link" href="{% url 'logout' %}"><button class="btn btn-danger" onclick="logout()">Logout</button></a>
-            </div>
-        </div>
-    </header>
+{% block content %}
 
     <div class="ngo-details-section">
         <div class="ngo-image">
@@ -61,28 +34,28 @@
                 <div class="colhead">Size</div>
                 <div class="colhead">Description</div>
             </div>
-    </div>
         </h2>
-        {% for product in ngo.product_set.all %}
-        <div class="donation-item {% cycle 'even' 'odd' %}">
-            <div class="column">
-                <h3>{{ product.productName }}</h3>
+            {% for product in ngo.product_set.all %}
+            <div class="donation-item {% cycle 'even' 'odd' %}">
+                <div class="column">
+                    <h5>{{ product.productName }}</h5>
+                </div>
+                <div class="column" id="quant">
+                    <p> {{ product.quantity }}</p>
+                </div>
+                <div class="column">
+                    <p> {{ product.size }}</p>
+                </div>
+                <div class="column"  id="desc">
+                    <p> {{ product.description }}</p>
+                </div>
             </div>
-            <div class="column" id="quant">
-                <p> {{ product.quantity }}</p>
-            </div>
-            <div class="column">
-                <p> {{ product.size }}</p>
-            </div>
-            <div class="column"  id="desc">
-                <p> {{ product.description }}</p>
-            </div>
-        </div>
-        {% empty %}
-        <br>
-        <p><strong>No donations listed.</strong></p>
-        {% endfor %}
-        
+            {% empty %}
+            <br>
+            <p><strong>No donations listed.</strong></p>
+            {% endfor %}
+    </div>
+    
 
         <div class="container mt-5">
             <h1 class="text-center mb-4">Active Campaigns</h1>
@@ -103,7 +76,7 @@
         </div>
         <br>
         <br>
-        
+        {% endblock %}
         <script src={% static "js/script.js" %}></script>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

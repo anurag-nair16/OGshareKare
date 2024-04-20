@@ -24,6 +24,7 @@ class Volunteer(models.Model):
     fullname = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.BigIntegerField()
+    location = models.CharField(max_length=255)
     address = models.CharField(max_length=255, blank=True, null=True)
     AVAILABILITY_CHOICES = [
         ('Weekdays', 'Weekdays'),

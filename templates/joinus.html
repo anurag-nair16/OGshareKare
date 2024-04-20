@@ -43,6 +43,15 @@
       {% for message in messages %}
           <div class="alert alert-warning alert-dismissible fade show" role="alert">
             {{ message }}
+            {% if form_errors %}
+            <ul>
+                {% for field, errors in form_errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            {% endif %}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
       {% endfor %}
@@ -60,9 +69,12 @@
 
         <label for="phone">Phone Number:</label>
         <input type="text" id="phone" name="phone" placeholder="91XXXXXXXX" required>
+        
+        <label for="address">Location:</label>
+        <input type="text" id="address" name="address" placeholder="Mumbai">
 
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" placeholder="XYZ building LMN street">
+        <label for="location">Address:</label>
+        <input type="text" id="location" name="location" placeholder="XYZ building LMN street">
 
         <label for="availability">Availability:</label>
         <select id="availability" name="availability" required>

@@ -1,0 +1,70 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block title %}
+    View Volunteers
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/ngohome.css" %}">
+    <style>
+        .volunteer-card {
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Available Volunteers</h1>
+
+    <!-- Filter Section -->
+    <div class="mb-4">
+        <form action="" method="get" class="row g-3">
+            <div class="col-md-4">
+                <select class="form-select" name="availability">
+                    <option value="" selected>Filter by Availability</option>
+                    <option value="Weekdays">Weekdays</option>
+                    <option value="Weekends">Weekends</option>
+                    <option value="Both">Both</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" name="interests">
+                    <option value="" selected>Filter by Interests</option>
+                    <option value="Event Planning">Event Planning</option>
+                    <option value="Fundraising">Fundraising</option>
+                    <option value="Public Relations">Public Relations</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Volunteer List -->
+    <div class="row">
+        {% for volunteer in volunteers %}
+        <div class="col-md-4">
+            <div class="card volunteer-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ volunteer.fullname }}</h5>
+                    <p class="card-text">Email: {{ volunteer.email }}</p>
+                    <p class="card-text">Phone: {{ volunteer.phone }}</p>
+                    <p class="card-text">Location: {{ volunteer.location }}</p>
+                    <p class="card-text">Availability: {{ volunteer.availability }}</p>
+                    <p class="card-text">Interests: {{ volunteer.interests }}</p>
+                    {% if volunteer.message %}
+                    <p class="card-text">Message: {{ volunteer.message }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p>No volunteers found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

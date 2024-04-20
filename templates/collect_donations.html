@@ -1,59 +1,37 @@
-{% comment %} 
-def tsp(locations, start_location):
-   
-    min_distance = float('inf')
-    best_route = None
-
-    for route in permutations(locations):
-        route = [start_location] + list(route) + [start_location]
-
-        total_distance = 0
-        for i in range(len(route) - 1):
-            lat1, lon1 = route[i]
-            lat2, lon2 = route[i + 1]
-            total_distance += haversine_distance(lat1, lon1, lat2, lon2)
-
-        if total_distance < min_distance:
-            min_distance = total_distance
-            best_route = route
-
-    return best_route[1:-1], min_distance
-
-def find_optimal_route(ngo_location, donor_locations):
-
-    locations = [(ngo_location.latitude, ngo_location.longitude)]
-    locations.extend([(donor.latitude, donor.longitude) for donor in donor_locations])
-
-    start_location = (ngo_location.latitude, ngo_location.longitude)
-    
-    optimal_route, total_distance = tsp(locations, start_location)
-
-    ordered_donors = [donor_locations[i - 1] for i in optimal_route]
-
-    return ordered_donors, total_distance
-
-
-
-def collect_donations(request, ngo_id):
-    ngo = get_object_or_404(NGO, id=ngo_id)
-    donations = Product.objects.filter(ngo=ngo, is_approved=True)
-
-    # Create a list of donor locations
-    donor_locations = []
-    for donation in donations:
-        donor_locations.append((donation.donor.latitude, donation.donor.longitude))
-
-    # Find the optimal route
-    ordered_donors, total_distance = find_optimal_route(ngo.ngoprofile, donor_locations)
-
-    # Return the ordered donors and total distance in JSON format
-    data = {
-        'ordered_donors': [(donor.latitude, donor.longitude) for donor in ordered_donors],
-        'total_distance': total_distance
+{% extends 'base2.html' %}
+{% load static %}
+{% block css %}
+<style>
+    .donation-table {
+        width: 100%;
+        border-collapse: collapse;
     }
 
-    return JsonResponse(data) {% endcomment %}
+    .donation-table th, .donation-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
 
+    .donation-item label {
+        display: block;
+    }
+
+    .donation-details {
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+
+{% block title %}
+    Donate Now
+{% endblock %}
+
+
+{% block content %}
+    <br>
     <form method="post" action={% url 'collect_donations'%}>
         {% csrf_token %}
         <table class="donation-table">
@@ -86,26 +64,7 @@ def collect_donations(request, ngo_id):
         </table>
         <button type="submit">Optimize Route</button>
     </form>
+    {% endblock %}
     
-    <style>
-        .donation-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
     
-        .donation-table th, .donation-table td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-    
-        .donation-item label {
-            display: block;
-        }
-    
-        .donation-details {
-            display: inline-block;
-            vertical-align: middle;
-        }
-    </style>
     

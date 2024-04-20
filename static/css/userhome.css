@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4e8e8;
+    background-color: #d8eafd;
     overflow-x: hidden;
 }
 
@@ -175,7 +175,8 @@ nav {
     padding-bottom: 5%;
     display: flex;
     justify-content: center;
-    background-image: url(../images/donback.jpg);
+    /* background-image: url(../images/search.jpg); */
+    background-color: #f5f8fb;
     background-size: 100% 100%;
 }
 
@@ -299,12 +300,6 @@ form {
         left: 17%;  
     }
 
-
-    .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
 
     .box {
         margin-bottom: 20px;

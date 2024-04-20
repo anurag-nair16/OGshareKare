@@ -11,118 +11,6 @@ body {
     overflow-x: hidden;
 }
 
-#left h1 {
-    font-size: 1.7rem;
-}
-
-#left h3 {
-    font-size: 1.2rem;
-}
-
-#lrig {
-    margin-top: 2%;
-}
-
-.m_container {
-    top: 0;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2%
-}
-
-#logo {
-    height: 90px;
-    width: 90px;
-    border-radius: 50%;
-} 
-
-#left {
-    display: flex;
-    flex: 1;
-    gap: 5%;
-}
-
-#right {
-    flex: 1;
-    text-align: right;
-    margin-top: 1%;
-}
-
-.vl {
-    border-left: 3px solid rgb(242, 183, 183);
-    height: auto;
-    margin-bottom: 1%;
-}
-
-#user1 {
-    margin-right: 1%;
-    margin-top: 1.7%;
-    width: 69px;
-    height: 35px;
-    text-align: center;
-    padding-top: 4px;
-    border-radius: 10%;
-}
-
-#link {
-    color: white;
-    font-size: 1.2rem;
-}
-
-#link:hover {
-    color: #402626;
-}
-
-#links {
-    text-decoration: none;
-    color: black;
-}
-
-.donation-item1:hover{
-    background-color: #893939;
-}
-
-#welcome {
-    margin-top: 2%;
-}
-
-header {
-    background-color: #17151c;
-    color: #fff;
-    padding: 20px 0;
-    top: 0;
-    height: fit-content;
-}
-
-header h1 {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-nav ul {
-    list-style: none;
-}
-
-#profile {
-    margin-top: 2.5%;
-    font-size: 23px;
-}
-
-#linkprofile{
-    text-decoration:none;
-    color: white;
-}
-
-#linkprofile:hover{
-    color: rgb(244, 78, 78);
-}
-
-
-/* NGO Details Section */
 .ngo-information {
     margin-top: 20px;
     padding: 20px;
@@ -184,6 +72,7 @@ nav ul {
 
 .donation-item {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid #ccc;

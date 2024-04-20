@@ -22,7 +22,7 @@ class DonationForm(forms.ModelForm):
 class VolunteerForm(forms.ModelForm):
     class Meta:
         model = Volunteer
-        fields = ['fullname', 'email', 'phone', 'address', 'availability', 'interests', 'message']
+        fields = ['fullname', 'email', 'phone', 'location', 'address', 'availability', 'interests', 'message']
         widgets = {
             'interests': forms.CheckboxSelectMultiple(),  # Render interests field as checkboxes
             'message': forms.Textarea(attrs={'rows': 4, 'cols': 100}),  # Set textarea attributes
