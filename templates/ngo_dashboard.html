@@ -24,9 +24,11 @@
                 <button type="submit" id="search-btn">Search</button>
             </form>
         </div><br>
+
+    <form method="post" action={% url 'collect_donations'%}>
+        {% csrf_token %}
         <div id="searchResults">
             {% for donation in donation %}
-            <a href="{% url 'user_donation' user_id=donation.user.id product_id=donation.id %}" id="parentlink">
                 <div id="parentt">
                     <div class="donation-item">
                         <br>
@@ -45,8 +47,9 @@
                 <p>No donations found.</p>
             {% endfor %}
         </div>
+    </form>
 
-        <h5 align="center">Don't find Your search??
+        <h5 align="center">Didn't find Your search?
         <a href="{% url 'create_donation' %}">CREATE LISTINGS</a></h5><br>
         <h5 align="center">OR <br><br>
         <div id="launchC"><a href="{% url 'create_campaign' %}" id="launchid">Launch a campaign</a></div></h5>

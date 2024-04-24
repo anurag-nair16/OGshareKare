@@ -12,6 +12,7 @@ class Donor(models.Model):
 
 class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True)
     other_products = models.TextField(max_length=100)
     phone_number = models.CharField(max_length=15)
     product_quantity = models.IntegerField()

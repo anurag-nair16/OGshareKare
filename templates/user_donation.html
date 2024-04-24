@@ -1,42 +1,14 @@
-<!DOCTYPE html>
+{% extends 'base2.html' %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NGO Donations</title>
-    <link rel="stylesheet" href="{% static "css/user_donate.css" %}"/>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% block title %}
+    Donate Now
+{% endblock %}
 
-</head>
-<body>
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/user_donate.css" %}">
+{% endblock %}
 
-    <header>
-        <div class="m_container">
-            <div id="left">
-                <div>
-                    <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo">
-                </div>
-                <div id="lrig">
-                        <h1>ShareKare</h1>
-                        <h3>Connecting Surplus with Need</h3>
-                    </span>
-                </div>
-            </div>
-            <div id="right">
-                <nav>
-                    <ul>
-                        <div id="profile"><a href="{% url 'ngo_dashboard' %}" id="linkprofile">Home</a></div>
-                    </ul>
-                </nav>
-            </div>
-            <div class="vl"></div>
-            <div id="user1">
-                <a id ="link" href="{% url 'logout' %}"><button class="btn btn-danger" onclick="logout()">Logout</button></a>
-            </div>
-            
-        </div>
-    </header>
+{% block content %}
 
     <!-- NGO Details Section -->
     <div class="ngo-details-section">
@@ -95,5 +67,6 @@
 </div>
 
     <script src={% static "js/script.js" %}></script>
+    {% endblock %}
 </body>
 </html>

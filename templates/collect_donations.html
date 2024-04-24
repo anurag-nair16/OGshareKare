@@ -2,25 +2,87 @@
 {% load static %}
 {% block css %}
 <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        background-color: lightblue;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        margin-top: 70px;
+    }
+
+    
+
     .donation-table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 30px;
     }
 
     .donation-table th, .donation-table td {
-        border: 1px solid #ccc;
-        padding: 8px;
+        border: 1px solid #ddd;
+        padding: 15px;
         text-align: left;
     }
 
-    .donation-item label {
-        display: block;
+    .donation-table th {
+        background-color: black;
+        color: white;
+
     }
 
-    .donation-details {
-        display: inline-block;
-        vertical-align: middle;
+    button[type="submit"] {
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 15px;
+        display: block;
+        margin: 30px auto 0;
+        transition: background-color 0.3s;
+        margin-right: 45%;
+        margin-top: 50px;
     }
+
+    button[type="submit"]:hover {
+        background-color: rgba(30, 128, 0, 0.442);
+    }
+
+    @media only screen and (max-width: 600px) {
+        .container {
+            padding: 15px;
+        }
+        .donation-table th, .donation-table td {
+            padding: 10px;
+        }
+
+    }
+
+
+
+    @media only screen and (max-width: 480px) {
+        .container {
+            margin-top: 20px;
+            max-width:fit-content;
+        }
+
+        .donation-table th, .donation-table td {
+            font-size: 6px;
+        }
+    }
+
+   
 </style>
 {% endblock %}
 
@@ -64,6 +126,11 @@
         </table>
         <button type="submit">Optimize Route</button>
     </form>
+
+    <div class="content1">
+        {% block content1 %}
+        {% endblock %}
+    </div>
     {% endblock %}
     
     
