@@ -11,6 +11,7 @@ urlpatterns = [
     path('signup/', views.signup, name="signup"),
     path('campaign/', views.campaign, name="campaign"),
     path('home/', views.main_home, name="home"),
+    path('view_notify/', views.view_notify, name="view_notify"),
     path('joinus/', views.joinus, name="joinus"),
     path('view_volunteers/', views.view_volunteers, name='view_volunteers'),
     path('register_ngo/', views.register_ngo, name='register_ngo'),
@@ -24,5 +25,9 @@ urlpatterns = [
     path('collect_donations/', views.collect_donations, name='collect_donations'),
     path('ngo_donations/<int:ngo_id>/<int:don_id>/', views.ngo_donations, name='ngo_donations'),
     path('user_donation/<int:user_id>/<int:product_id>/', views.user_donation, name='user_donation'),
+    path('mark_as_read/', views.mark_as_read, name='mark_as_read'),
+    # path('optimized/', views.optimized, name='optimized'),
+    # path('showroute/', views.showroute, name='showroute'),
+    path('map',views.showmap,name='showmap'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

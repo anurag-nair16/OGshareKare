@@ -69,3 +69,6 @@ class CampaignForm(forms.ModelForm):
     class Meta:
         model = CreateCampaign
         fields = ['title', 'description', 'start_date', 'end_date', 'items_needed']
+
+class MarkAsReadForm(forms.Form):
+    notification_id = forms.IntegerField(widget=forms.HiddenInput())

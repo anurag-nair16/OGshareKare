@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 # Register your models here.
-from .models import Donation,Volunteer,NGO, NGOProfile, Product, CreateCampaign, Donor
+from .models import Donation,Volunteer,NGO, NGOProfile, Product, CreateCampaign, Donor, Notification
 
 admin.site.register(Donation)
 admin.site.register(Volunteer)
@@ -49,5 +49,6 @@ admin.site.register(NGO,NGOAdmin)
 admin.site.register(Product)
 admin.site.register(CreateCampaign)
 admin.site.register(Donor)
+admin.site.register(Notification)
 
 

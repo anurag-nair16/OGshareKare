@@ -1,0 +1,52 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block title %}
+    Donate Now
+{% endblock %}
+
+{% block css %}
+<style>
+    .no-notifications {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 20px;
+        color: #6c757d;
+    }
+
+    .no-notifications i {
+        font-size: 100px;
+        margin-bottom: 20px;
+        color: #6c757d;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+    <ul class="list-group mt-4">
+        {% if notifications %}
+        <h1 class="mt-4">Notifications</h1>
+        {% for notification in notifications %}
+        <li id="notification-{{ notification.id }}" class="list-group-item {% if notification.read %}bg-light{% endif %}">
+            <form action="{% url 'mark_as_read' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="notification_id" value="{{ notification.id }}">
+                <button class="btn btn-primary btn-sm" type="submit" {% if notification.read %}disabled{% endif %}>Mark as Read</button>
+            </form>
+            <span>{{ notification.message | safe }}</span>
+            <input type="checkbox" {% if notification.read %}checked{% endif %} disabled>
+        </li>
+        {% endfor %}
+        {% else %}
+        <div class="no-notifications">
+            <i class="fas fa-bell-slash"></i>
+            <p>You have no notifications.</p>
+        </div>
+        {% endif %}
+    </ul>
+</div>
+{% endblock %}

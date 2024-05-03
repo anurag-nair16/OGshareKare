@@ -181,6 +181,11 @@ nav ul {
     justify-content: center;
 }
 
+#donlink{
+    text-decoration: none;
+    color: black;
+}
+
 .donation-item{
     display: flex;
     flex-direction: column;
@@ -188,6 +193,9 @@ nav ul {
     align-items: center;
 }
 
+#card:hover{
+    background-color: #ccc;
+}
 
 .donation-image img {
     max-width: 100%;

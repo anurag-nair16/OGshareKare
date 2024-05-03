@@ -1,0 +1,50 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Route between the locations</title>
+    {{map.header.render|safe}}
+</head>
+<body>
+	{% if map %}
+
+  	{{map.html.render|safe}}
+  	<script>
+    	{{map.script.render|safe}}
+  	</script>
+	{% endif %}
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Route between the locations</title>
+  {{map.header.render|safe}}
+</head>
+<body>
+
+    <div class="box">
+        <h1>Today's deliveries</h1>
+        
+            {% for location in loc %}
+                <div class="arrow-step step{{ forloop.counter }}">
+                    <div class="number">{{ forloop.counter }}</div>
+                    {{ location }} 
+                </div>
+            {% endfor %}
+    </div>
+
+
+    {% if map %}
+    {{map.html.render|safe}}
+    <script>
+      {{map.script.render|safe}}
+      var route = {{ route|safe }};
+      var polyline = L.polyline(route, {color: 'blue'}).addTo(map);
+      map.fitBounds(polyline.getBounds());
+    </script>
+  {% endif %}
+</body>
+</html>

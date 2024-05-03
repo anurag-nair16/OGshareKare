@@ -4,19 +4,34 @@ from .forms import CreateUserForm,DonationForm,VolunteerForm,NGORegistrationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .models import User, Donation, NGO, NGOProfile, Product, CreateCampaign, Donor, Volunteer
+from .models import User, Donation, NGO, NGOProfile, Product, CreateCampaign, Donor, Volunteer, Notification
 from django.utils import timezone
 import math
 from itertools import permutations
 from django.shortcuts import render
-from.donation_index import DonationDocument
+from .forms import MarkAsReadForm
+
+def mark_as_read(request):
+    if request.method == 'POST':
+        form = MarkAsReadForm(request.POST)
+        if form.is_valid():
+            notification_id = form.cleaned_data['notification_id']
+            notification = Notification.objects.get(pk=notification_id)
+            notification.mark_as_read()
+    return redirect('view_notify')
+
+def view_notify(request):
+    unread_notifications = Notification.objects.filter(user=request.user, read=False)
+    read_notifications = Notification.objects.filter(user=request.user, read=True)
+    
+    notifications = list(unread_notifications) + list(read_notifications)
+    return render(request, 'notifications.html',{'notifications':notifications})
 
 #list of volunteers (NGO)
 def view_volunteers(request):
     volunteers = Volunteer.objects.all()
 
     availability = request.GET.get('availability')
-    print(availability)
     if availability:
         if availability != 'Both':
             volunteers =volunteers = volunteers.filter(availability=availability) | volunteers.filter(availability='Both')
@@ -32,10 +47,31 @@ def view_volunteers(request):
         'ngoname': request.user.ngo.ngoname 
     }
 
+    lat, lng = get_lat_long(request.user.ngo.ngoprofile.location)
+    print(lat,lng)
+
     return render(request, 'view_volunteers.html', context)
 
 
-#input of donations to be collected (NGO)
+def get_lat_long(location):
+
+    print(location)
+    api_key = 'AIzaSyDBr2z__qKnRrmI2V1Cwf4vs8fUzixEOtQ'
+    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={location}&key={api_key}'
+
+    response = requests.get(url)
+    print(response)
+    data = response.json()
+    print(data)
+    if data['status'] == 'OK':
+        lat = data['results'][0]['geometry']['location']['lat']
+        lng = data['results'][0]['geometry']['location']['lng']
+        return lat, lng
+    else:
+        return None, None
+    
+
+
 def collect_donations(request):
     if request.method == 'POST':
         selected_donation_ids = request.POST.getlist('selected_donations')
@@ -47,24 +83,57 @@ def collect_donations(request):
                                for donation in selected_donations if donation.user.donor.latitude and donation.user.donor.longitude]
             
             # Get NGO location
-            ngo_location = (request.user.ngo.ngoprofile.latitude, request.user.ngo.ngoprofile.longitude)
+            ngo_location = (request.user.ngo.latitude, request.user.ngo.longitude)
             print(ngo_location)
             # Solve TSP
             optimal_route, total_distance = solve_tsp(ngo_location, donor_locations)
-
+            
             location_names=[]
             for lat,lon in optimal_route:
                 location = Donor.objects.filter(latitude=lat, longitude=lon).first()
                 location_names.append(location.location)
             donations = Donation.objects.all()
 
+            route=json.dumps(optimal_route)
+
+            figure = folium.Figure()
+            route_coordinates = json.loads(route)
+            
+            # Add NGO location at the start of the route
+            ngo_location = (request.user.ngo.latitude, request.user.ngo.longitude)
+            route_coordinates.insert(0, ngo_location)
+            
+            # Get the route from OSRM
+            osrm_route = get_osrm_route(route_coordinates)
+            
+            m = folium.Map(location=route_coordinates[0], zoom_start=10)
+            m.add_to(figure)
+            
+            # Mark each point of the route on the map
+            for point in route_coordinates:
+                folium.Marker(location=point, icon=folium.Icon(color='blue')).add_to(m)
+
+            for idx, point in enumerate(route_coordinates):
+                if idx == 0:
+                    folium.Marker(location=point, icon=folium.Icon(color='green'), popup='Start').add_to(m)
+                elif idx == len(route_coordinates) - 1:
+                    folium.Marker(location=point, icon=folium.Icon(color='red'), popup='End').add_to(m)
+                else:
+                    folium.Marker(location=point, icon=folium.DivIcon(html=f'<div style="font-size: 20pt; color: black;">{idx}</div>')).add_to(m)
+            
+            folium.PolyLine(osrm_route, weight=8, color='blue', opacity=0.6).add_to(m)
+            figure.render()
+
             context = {
                 'location_names':location_names,
                 'optimal_route': optimal_route,
                 'total_distance': total_distance,
                 'donations': donations,
+                'map': figure, 
+                'route': json.dumps(route_coordinates), 
             }
             
+            # return redirect('showroute', route=json.dumps(optimal_route), loc=json.dumps(location_names))
             return render(request, 'optimized_route.html', context)
     
     donations = Donation.objects.all()
@@ -202,14 +271,14 @@ def ngo_dash(request):
     
 
     query = request.GET.get('q')
-    # donation = Donation.objects.filter(other_products__icontains=query) if query else Donation.objects.all()
-    if query:
-        donations = DonationDocument.search().query("match", _all=query)
-    else:
-        donations = Donation.objects.all()
+    donation = Donation.objects.filter(other_products__icontains=query) if query else Donation.objects.all()
+    # if query:
+    #     donations = DonationDocument.search().query("match", _all=query)
+    # else:
+    #     donations = Donation.objects.all()
 
-    ngo_latitude = profile.ngoprofile.latitude
-    ngo_longitude = profile.ngoprofile.longitude
+    ngo_latitude = profile.latitude
+    ngo_longitude = profile.longitude
     print(ngo_latitude)
     print(ngo_longitude)
 
@@ -261,46 +330,51 @@ def main_home(request):
     nearest_campaigns = []
 
     if request.user.is_authenticated:
-        try:
-            profile = Donor.objects.get(user=request.user)
-            user_location_name = profile.location
-            if not profile.latitude and not profile.longitude:
-                user_lat, user_lon = get_lat_lon_from_location(user_location_name)
-            else:
-                user_lat=profile.latitude
-                user_lon=profile.longitude
+        if not request.session.get('modal_shown', False):
+            request.session['modal_shown'] = True
+            try:
+                profile = Donor.objects.get(user=request.user)
+                user_location_name = profile.location
+                if not profile.latitude and not profile.longitude:
+                    user_lat, user_lon = get_lat_lon_from_location(user_location_name)
+                else:
+                    user_lat=profile.latitude
+                    user_lon=profile.longitude
 
-            if user_lat and user_lon:
-                profile.latitude = user_lat
-                profile.longitude = user_lon
-                profile.save()
+                if user_lat and user_lon:
+                    profile.latitude = user_lat
+                    profile.longitude = user_lon
+                    profile.save()
 
-                for product in products:
-                    ngo_location = product.ngo.ngoprofile.location
-                    if not product.ngo.ngoprofile.latitude and not product.ngo.ngoprofile.longitude:
-                        ngo_lat, ngo_lon = get_lat_lon_from_location(ngo_location)
-                    else:
-                        ngo_lat=product.ngo.ngoprofile.latitude
-                        ngo_lon=product.ngo.ngoprofile.longitude
-                    if ngo_lat and ngo_lon:
-                        try:
-                            product.ngo.ngoprofile.latitude = ngo_lat
-                            product.ngo.ngoprofile.longitude = ngo_lon
-                            product.ngo.ngoprofile.save()
-                        except Exception as e:
-                            print(f"Error calculating distance: {e}")
+                    for product in products:
+                        ngo_location = product.ngo.ngoprofile.location
+                        if not product.ngo.latitude and not product.ngo.longitude:
+                            ngo_lat, ngo_lon = get_lat_lon_from_location(ngo_location)
+                        else:
+                            ngo_lat=product.ngo.latitude
+                            ngo_lon=product.ngo.longitude
+                        if ngo_lat and ngo_lon:
+                            try:
+                                product.ngo.latitude = ngo_lat
+                                product.ngo.longitude = ngo_lon
+                                product.ngo.save()
+                            except Exception as e:
+                                print(f"Error calculating distance: {e}")
 
-                products = sorted(products, key=lambda x: haversine_distance(user_lat, user_lon, x.ngo.ngoprofile.latitude, x.ngo.ngoprofile.longitude))
+                    products = sorted(products, key=lambda x: haversine_distance(user_lat, user_lon, x.ngo.latitude, x.ngo.longitude))
+                    unread_notifications = Notification.objects.filter(user=request.user, read=False)
+                    has_new_notifications = unread_notifications.exists()
+                    print(has_new_notifications)
+                    context = {'products': products, 'nearest_campaigns': nearest_campaigns, 'has_new_notifications': has_new_notifications}
+                    return render(request, 'home.html', context)
+                
+            except Donor.DoesNotExist:
+                pass
+            except Exception as e:
+                print(f"Error fetching user location: {e}")
 
-                context = {'products': products, 'nearest_campaigns': nearest_campaigns}
-                return render(request, 'home.html', context)
-            
-        except Donor.DoesNotExist:
-            pass
-        except Exception as e:
-            print(f"Error fetching user location: {e}")
-
-    context = {'products': products, 'nearest_campaigns': nearest_campaigns}
+    has_new_notifications = False
+    context = {'products': products, 'nearest_campaigns': nearest_campaigns, 'has_new_notifications': has_new_notifications}
     return render(request, 'home.html', context)
 
 #register with us (Both)
@@ -480,6 +554,7 @@ def create_campaign(request):
             campaign.ngo = request.user
             campaign.save()
             messages.success(request, 'Campaign listed succesfully')
+            Notification.send_campaign_notifications(campaign.ngo)
             return redirect('ngo_dashboard')
     else:
         form = CampaignForm()
@@ -491,3 +566,112 @@ def logout_view(request):
     logout(request)
     messages.info(request, "You have been logged out.")
     return redirect('login')  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import requests
+import json
+import polyline
+import folium
+
+
+def get_route(pickup_lon, pickup_lat, dropoff_lon, dropoff_lat):
+    loc = "{},{};{},{}".format(pickup_lon, pickup_lat, dropoff_lon, dropoff_lat)
+    url = "http://router.project-osrm.org/route/v1/driving/"
+    r = requests.get(url + loc) 
+    if r.status_code!= 200:
+        return {}
+    res = r.json()   
+    routes = polyline.decode(res['routes'][0]['geometry'])
+    start_point = [res['waypoints'][0]['location'][1], res['waypoints'][0]['location'][0]]
+    end_point = [res['waypoints'][1]['location'][1], res['waypoints'][1]['location'][0]]
+    distance = res['routes'][0]['distance']
+    
+    out = {'route':routes,
+           'start_point':start_point,
+           'end_point':end_point,
+           'distance':distance
+          }
+
+    return out
+
+
+def showmap(request):
+    return render(request,'showmap.html')
+
+# def showroute(request, route ,loc):
+#     figure = folium.Figure()
+#     route_coordinates = json.loads(route)
+    
+#     # Add NGO location at the start of the route
+#     ngo_location = (request.user.ngo.latitude, request.user.ngo.longitude)
+#     route_coordinates.insert(0, ngo_location)
+    
+#     # Get the route from OSRM
+#     osrm_route = get_osrm_route(route_coordinates)
+    
+#     m = folium.Map(location=route_coordinates[0], zoom_start=10)
+#     m.add_to(figure)
+    
+#     # Mark each point of the route on the map
+#     for point in route_coordinates:
+#         folium.Marker(location=point, icon=folium.Icon(color='blue')).add_to(m)
+
+#     for idx, point in enumerate(route_coordinates):
+#         if idx == 0:
+#             folium.Marker(location=point, icon=folium.Icon(color='green'), popup='Start').add_to(m)
+#         elif idx == len(route_coordinates) - 1:
+#             folium.Marker(location=point, icon=folium.Icon(color='red'), popup='End').add_to(m)
+#         else:
+#             folium.Marker(location=point, icon=folium.DivIcon(html=f'<div style="font-size: 20pt; color: black;">{idx}</div>')).add_to(m)
+    
+#     folium.PolyLine(osrm_route, weight=8, color='blue', opacity=0.6).add_to(m)
+#     figure.render()
+
+#     print(loc)
+#     loc = loc.split('\n')
+
+#     print(loc)
+    
+#     context = {
+#         'map': figure, 
+#         'route': json.dumps(route_coordinates), 
+#         'loc':loc,
+#         }
+#     return render(request, 'showroute.html', context)
+
+def get_osrm_route(coordinates):
+    loc = ";".join([f"{lon},{lat}" for lat, lon in coordinates])
+    url = f"http://router.project-osrm.org/route/v1/driving/{loc}"
+    r = requests.get(url)
+    
+    if r.status_code != 200:
+        return []
+    
+    res = r.json()
+    osrm_route = polyline.decode(res['routes'][0]['geometry'])
+    
+    return osrm_route

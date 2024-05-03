@@ -29,8 +29,9 @@
         {% csrf_token %}
         <div id="searchResults">
             {% for donation in donation %}
+            <a id="donlink" href="{% url 'user_donation' donation.user.id donation.id %}">
                 <div id="parentt">
-                    <div class="donation-item">
+                    <div class="donation-item" id="card">
                         <br>
                         <div class="donation-image">
                             <img src="{{ donation.product_images.url }}" alt="{{ donation.other_products }}">

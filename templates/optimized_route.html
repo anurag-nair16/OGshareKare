@@ -1,12 +1,188 @@
-{% extends 'collect_donations.html' %}
+<!DOCTYPE html>
 {% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {{map.header.render|safe}}
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: whitesmoke;
+      }
+      
+      .box {
+        width: 80%;
+        margin: auto;
+        background-color: white;
+        padding: 20px;
+        margin-top: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      h1 {
+        text-align: center;
+        margin-top: 0;
+      }
+      
+      #barr {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+      }
+      
+      .arrow-step {
+        position: relative;
+        width: auto;
+        height: 48px;
+        line-height: 48px;
+        background-color: blue;
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        transition: all 0.5s ease-in-out;
+        border-radius: 5px;
+        color: white;
+        padding: 0 20px; /* Added padding for the arrow shape */
+        position: relative; /* Added to position the numbering */
+        display: flex;
+        align-items: center;
+      }
+      
+      .arrow-step .number {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: white;
+        color: blue;
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 10px;
+      }
+      
+      .arrow-step:hover {
+        transform: scale(1.1);
+      }
+      
+      .arrow-step::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-top: 24px solid transparent;
+        border-bottom: 24px solid transparent;
+        border-right: 20px solid blue;
+      }
+      
+      .arrow-step::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        border-top: 24px solid transparent;
+        border-bottom: 24px solid transparent;
+        border-left: 20px solid blue;
+      }
+      
+      .address-box {
+        display: none;
+        position: absolute;
+        width: 200px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+  
+      @media screen and (max-width: 768px) {
+        .arrow-step {
+          width: 80%; /* Adjusted width for smaller screens */
+        }
+      }
+      #map {
+        height: 500px;
+        width: 80%; /* Adjusted width to fit within the box */
+        margin: 250px auto; /* Centering the map horizontally with some top margin */
+        margin-bottom:10px;
+      }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">
+        <img src="{% static "images/ShareKare.png" %}" id="logo" alt="ShareCare Logo" height="30px" width="auto" border-radius="50%">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
 
-{% block content1 %}
-    <h1>Optimized Route</h1>
-    <p>Total distance: {{ total_distance }} km</p>
-    <ol>
-        {% for loc in location_names %}
-            <li>{{ loc }}</li>
-        {% endfor %}
-    </ol>
-{% endblock %}
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'ngo_dashboard' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'collect_donations' %}">Collect Donations</a>
+              </li>
+          </ul>
+      </div>
+  </nav>
+
+    <div class="box">
+      <h1>Today's deliveries</h1>
+      <div id="barr">
+          {% for location in location_names %}
+                  <div class="arrow-step step{{ forloop.counter }}">
+                      <div class="number">{{ forloop.counter }}</div>
+                      {{ location }}
+                      <div class="address-box" id="address{{ forloop.counter }}">
+                        Hello there
+                      </div>
+                  </div>
+                  
+          {% endfor %}
+      </div>
+      <div class="progress-bar">
+          {% for location in location_names %}
+              <div class="arrow-step step{{ forloop.counter }}">
+                  <div class="number">{{ forloop.counter }}</div>
+                  {{ location }} {{location}}
+              </div>
+              
+          {% endfor %}
+      </div>
+  </div>
+    
+  <div id="map">
+    {% if map %}
+      {{map.html.render|safe}}
+      <script>
+        {{map.script.render|safe}}
+        var route = {{ route|safe }};
+        var polyline = L.polyline(route, {color: 'blue'}).addTo(map);
+        map.fitBounds(polyline.getBounds());
+      </script>
+    {% endif %}
+  </div>
+
+  <br><br>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
