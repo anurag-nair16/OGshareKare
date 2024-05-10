@@ -29,5 +29,7 @@ urlpatterns = [
     # path('optimized/', views.optimized, name='optimized'),
     # path('showroute/', views.showroute, name='showroute'),
     path('map',views.showmap,name='showmap'),
+    path('update_status/', views.update_status, name='update_status'), 
+    path('remove_product/<int:product_id>/', views.remove_product, name='remove_product'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

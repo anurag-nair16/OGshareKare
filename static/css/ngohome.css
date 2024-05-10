@@ -299,3 +299,9 @@ nav {
     top: 100%;
     width: 100%;
 }
+
+.card{
+    min-height: 320px;
+    max-height: 320px;
+    overflow-y: auto;
+}

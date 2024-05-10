@@ -20,19 +20,19 @@
             <p><strong>Name: </strong>{{ userr.first_name }}</p>
             <p><strong>Username:</strong> {{ userr.username }}</p>
             <p><strong>Email: </strong>{{ userr.email }}</p>
-            <p><strong>Email: </strong>{{ donor.location }}</p>
+            <p><strong>Location: </strong>{{ donor.location }}</p>
             
         </div>
     </div>
 
     <div class="donations-section">
-        <div id="headin"><div id="txthead"><h2>Donations listed by {{ donor.username }} </h2></div></div>
+        <div id="headin"><div id="txthead"><h2>Donations listed by {{ donor }} </h2></div></div>
     </div>
     <br>
 
     <div id="grandparent">
 
-        <div id="parentleft">
+        {% comment %} <div id="parentleft">
             <div id="hihgdon">
                 <a href="{{ donation.product_images.url }}" target="_blank">
                 <img src="{{ product_high.product_images.url }}" alt="{{ donation.other_products }}" class="donation-image"><br>
@@ -40,9 +40,9 @@
                 <h2> {{product_high.other_products}}</h2>
                 <p><b>Quantity:  </b>{{product_high.product_quantity}}</p><br>        
             </div>  
-        </div>
+        </div> {% endcomment %}
 
-        {% for donation in donations %}
+        {% comment %} {% for donation in donations %}
         {% if donation.id != product_high.id %}
             <div class="donation-item1 {% cycle 'even' 'odd' %}" id="ditem">
                 <div class="column" id="quant">
@@ -63,7 +63,31 @@
         {% empty %}
         <br>
         <p><strong>No donations listed.</strong></p>
+        {% endfor %} {% endcomment %}
+
+        <div>
+        {% for donation in pending_donations %}
+            <div class="donation-item1 {% cycle 'even' 'odd' %}" id="ditem">
+                <div class="column" id="quant">
+                    <a href="{{ donation.product_images.url }}" target="_blank">
+                        <img src="{{ donation.product_images.url }}" alt="{{ donation.other_products }}" class="donation-image">  
+                    </a>         
+                </div>
+                <br>
+                <div class="column">
+                    <h2> {{ donation.other_products }}</h2>
+                </div>
+                <div class="column" id="quant">
+                    <p><b>Quantity: {{ donation.product_quantity }}</b></p>
+                </div>
+            </div>
+        {% empty %}
+            <br>
+            <p><strong>No pending donations listed.</strong></p>
         {% endfor %}
+        </div>
+
+        
 </div>
 
     <script src={% static "js/script.js" %}></script>

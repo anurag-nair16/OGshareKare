@@ -29,14 +29,23 @@
         <br>
         <h2>
             <div id="headitems">
-                <div class="colhead">Product</div>
+                <div class="colhead">Remove</div>
                 <div class="colhead">Quantity</div>
                 <div class="colhead">Size</div>
                 <div class="colhead">Description</div>
+                <div class="colhead">Product</div>
             </div>
         </h2>
             {% for product in ngo.product_set.all %}
             <div class="donation-item {% cycle 'even' 'odd' %}">
+                <div class="column"> <!-- Column for remove button -->
+                    <form method="post" action="{% url 'remove_product' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm">
+                            <img src="{% static 'images/trash.png' %}" alt="Remove" style="width: 20px; height: 20px;">
+                        </button>
+                    </form>
+                </div>
                 <div class="column">
                     <h5>{{ product.productName }}</h5>
                 </div>
@@ -49,6 +58,8 @@
                 <div class="column"  id="desc">
                     <p> {{ product.description }}</p>
                 </div>
+                
+                
             </div>
             {% empty %}
             <br>

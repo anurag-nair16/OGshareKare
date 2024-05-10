@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block css %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static "css/realcampstys.css" %}">
 {% endblock %}
 {% block title %}
@@ -11,28 +12,37 @@
 {% block content %}
     <div class="container">
         <div class="search-box">
-            <input type="text" placeholder="Search...">
-            <button>Search</button>
-        </div>
+            <form method="GET" action="{% url 'real_campaigns' %}">
+                <input type="text" name="q" placeholder="Search by campaign or location..." value="{{ request.GET.q }}">
+                <button type="submit">Search</button>
+            </form>                       
+        </div>        
         <div class="campaign-container">
-            {% for campaign in camp %}
-                {% with ngo_profile=ngo_profiles|first %}
-                    <div class="campaign-box">
-                        <div class="campaign">
-                            <div class="campaign-image">
-                                <img src="{{ ngo_profile.image1.url }}" alt="{{ campaign.title }}">
-                            </div>
-                            <div class="campaign-info">
-                                <h2>{{ campaign.title }}</h2>
-                                <p>{{ campaign.description }}</p>
-                                <p>Start Date: {{ campaign.start_date }}</p>
-                                <p>End Date: {{ campaign.end_date }}</p>
-                                <p>Location: {{ ngo_profile.location }}</p>
+            {% if camp %}
+                {% for campaign in camp %}
+                    {% with ngo_profile=ngo_profiles|first %}
+                        <div class="campaign-box">
+                            <div class="campaign">
+                                <div class="campaign-image">
+                                    <img src="{{ ngo_profile.image1.url }}" alt="{{ campaign.title }}">
+                                </div>
+                                <div class="campaign-info">
+                                    <h2>{{ campaign.title }}</h2>
+                                    <p>{{ campaign.description }}</p>
+                                    <p>{{ campaign.ngo }}</p>
+                                    <p>Start Date: {{ campaign.start_date }}</p>
+                                    <p>End Date: {{ campaign.end_date }}</p>
+                                    <p>Location: {{ campaign.location }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endwith %}
-            {% endfor %}
+                    {% endwith %}
+                {% endfor %}
+            {% else %}
+            <div class="text-center mt-4">
+                <p>No campaigns found. <i class="bi bi-emoji-frown-fill text-primary"></i></p>
+            </div>
+            {% endif %}
         </div>
         
     </div>

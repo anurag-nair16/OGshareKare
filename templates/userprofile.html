@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-Ka0e1J06Pjg+7qft7AGG9Zt82x1PuKw5g60c8IzQDkPnG5KkOJ2/D4+4sjSYW9L7qTt1zQptX+RyK7AYQaUXUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{% static "css/ngo_prof.css" %}">
+
 {% endblock %}
 {% block title %}
     Donate Now
@@ -36,29 +38,73 @@
                 <div class="colhead">Quantity</div>
                 <div class="colhead">Contact info</div>
                 <div class="colhead">Image</div>
+                <div class="colhead">Status</div>
             </div>
         </h2>
         {% for donation in user.donation_set.all %}
-        <div class="donation-item {% cycle 'even' 'odd' %}">
-            <div class="column">
-                <h3>{{ donation.other_products }}</h3>
-            </div>
-            <div class="column" id="quant">
-                <p> {{ donation.product_quantity }}</p>
-            </div>
-            <div class="column">
-                <p>{{ donation.phone_number }}</p>
-            </div>
-            <div class="column" id="quant">
-                <a href="{{ donation.product_images.url }}" target="_blank">
-                    <img src="{{ donation.product_images.url }}" alt="{{ donation.other_products }}" class="donation-image">
-                </a>
-            </div>
-        </div>
-        {% empty %}
-        <br>
-        <p><strong>No donations made yet.</strong></p>
-        {% endfor %}
+            {% if donation.status == 'PENDING' %}
+                <div class="donation-item {% cycle 'even' 'odd' %}">
+                    <div class="column">
+                        <h3>{{ donation.other_products }}</h3>
+                    </div>
+                    <div class="column" id="quant">
+                        <p> {{ donation.product_quantity }}</p>
+                    </div>
+                    <div class="column">
+                        <p>{{ donation.phone_number }}</p>
+                    </div>
+                    <div class="column" id="quant">
+                        <a href="{{ donation.product_images.url }}" target="_blank">
+                            <img src="{{ donation.product_images.url }}" alt="{{ donation.other_products }}" class="donation-image">
+                        </a>
+                    </div>
+                    <div class="column">
+                        <span style="color: #f39c12;">&#x23F3;</span> <!-- Unicode symbol for pending status -->
+                        <span class="status-pending">Pending</span>
+                        <form method="post" action="{% url 'update_status' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="donation_id" value="{{ donation.id }}">
+                            <input type="hidden" name="new_status" value="DONATED">&nbsp
+                            <button type="submit" class="btn btn-success btn-sm">
+                                &#10003; <!-- Unicode symbol for a checkmark -->
+                                Mark as Donated
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+            {% endfor %}
+
+            {% for donation in user.donation_set.all %}
+                {% if donation.status == 'DONATED' %}
+                    <div class="donation-item {% cycle 'even' 'odd' %}">
+                        <div class="column">
+                            <h3>{{ donation.other_products }}</h3>
+                        </div>
+                        <div class="column" id="quant">
+                            <p> {{ donation.product_quantity }}</p>
+                        </div>
+                        <div class="column">
+                            <p>{{ donation.phone_number }}</p>
+                        </div>
+                        <div class="column" id="quant">
+                            <a href="{{ donation.product_images.url }}" target="_blank">
+                                <img src="{{ donation.product_images.url }}" alt="{{ donation.other_products }}" class="donation-image">
+                            </a>
+                        </div>
+                        <div class="column">
+                            <span style="color: #27ae60;">&#x2714;</span> <!-- Unicode symbol for donated status -->
+                            <span class="status-donated">Donated</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if user.donation_set.all|length == 0 %}
+                <br>
+                <p><strong>No donations made yet.</strong></p>
+            {% endif %}
+
     </div>
 
 {% endblock %}

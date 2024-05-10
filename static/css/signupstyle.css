@@ -136,6 +136,7 @@ input[type="tel"]   {
     border-radius: 8px;
     box-shadow: 7px 10px 10px;
     width: 300px;
+    max-width: max-content;
     height: max-content;
     padding: 20px;
 }
@@ -202,16 +203,20 @@ html {
     scroll-behavior: smooth;
 }
 
-/* @media (max-width: 600px ) {
-    .cont{
-        margin-top: 20%;
-        margin-bottom: 10%;
-    }   
+
+/* Style for form errors */
+.error-message {
+    color: #ff0000; /* Red color for error messages */
+    font-size: 14px; /* Font size of error messages */
+     /* Space between input field and error message */
 }
 
-@media (min-width: 601px ) {
-    .cont{
-        margin-top: 3%;
-    }   
-} */
+
+/* Style for the form error summary */
+.error-summary {
+    color: #ff0000; /* Red color for error summary */
+    font-size: 16px; /* Font size of error summary */
+    font-weight: bold; /* Bold font weight for error summary */
+}
+
 

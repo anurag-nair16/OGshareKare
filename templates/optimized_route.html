@@ -12,16 +12,17 @@
         font-family: sans-serif;
         margin: 0;
         padding: 0;
-        background-color: whitesmoke;
+        background-color: #011161;
       }
       
       .box {
         width: 80%;
         margin: auto;
-        background-color: white;
         padding: 20px;
         margin-top: 15px;
         border-radius: 10px;
+        background-color: #6777c9;
+        color:white;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
       
@@ -113,7 +114,7 @@
         height: 500px;
         width: 80%; /* Adjusted width to fit within the box */
         margin: 250px auto; /* Centering the map horizontally with some top margin */
-        margin-bottom:10px;
+        margin-bottom:100px;
       }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -177,9 +178,11 @@
         map.fitBounds(polyline.getBounds());
       </script>
     {% endif %}
+    <br><br>
   </div>
 
-  <br><br>
+
+  
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

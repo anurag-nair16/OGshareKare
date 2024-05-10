@@ -48,37 +48,58 @@
                 </div>
             {% endfor %}
         {% endif %}
+
                 <br><br>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="cont">
                 <div id="login">
                     <h1><b>NGO Registration</b></h1><br>
-                    {{form.errors}}
                 </div>
-                <div id="fullname">
+                <div id="fullname" class="{% if form.username.errors %}error-input{% endif %}">
                     <label for="username">Username</label><br>
+                    {% for error in form.username.errors %}
+                        <span class="error-message">{{ error }}</span> <!-- Error message for username -->
+                    {% endfor %}
                     {{form.username}}
+                    
                 </div>
-                <div id="email">
+                <div id="email" class="{% if form.email.errors %}error-input{% endif %}">
                     <label for="email">Email</label><br>
+                    {% for error in form.email.errors %}
+                        <span class="error-message">{{ error }}</span> <!-- Error message for email -->
+                    {% endfor %}
                     {{form.email}}
+                    
                 </div>
-                <div id="password">
-                    <label for="password1">Password</label><br>
+                <div id="password" class="{% if form.password.errors %}error-input{% endif %}">
+                    <label for="password">Password</label><br>
+                    {% for error in form.password.errors %}
+                        <span class="error-message">{{ error }}</span> <!-- Error message for password -->
+                    {% endfor %}
                     {{form.password}}
+                    
                 </div>
-                <div id="ngoname">
-                    <label for="password1">NGO Name</label><br>
+                <div id="ngoname" class="{% if form.ngoname.errors %}error-input{% endif %}">
+                    <label for="ngoname">NGO Name</label><br>
                     {{form.ngoname}}
+                    {% for error in form.ngoname.errors %}
+                        <span class="error-message">{{ error }}</span> <!-- Error message for NGO name -->
+                    {% endfor %}
                 </div>
-                <div id="regno">
-                    <label for="password1">Registration Number</label><br>
+                <div id="regno" class="{% if form.regno.errors %}error-input{% endif %}">
+                    <label for="regno">Registration Number</label><br>
                     {{form.regno}}
+                    {% for error in form.regno.errors %}
+                        <span class="error-message">{{ error }}</span> <!-- Error message for registration number -->
+                    {% endfor %}
                 </div>
-                <div id="document">
-                    <label for="password1">Registration Document</label><br>
+                <div id="document" class="{% if form.document.errors %}error-input{% endif %}">
+                    <label for="document">Registration Document</label><br>
                     {{form.document}}
+                    {% for error in form.document.errors %}
+                        <span class="error-message">{{ error }}</span> <!-- Error message for registration document -->
+                    {% endfor %}
                 </div>
                 <div id="submit">
                     <button>Create Account</button>

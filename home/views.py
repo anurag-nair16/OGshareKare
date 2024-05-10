@@ -10,6 +10,24 @@ import math
 from itertools import permutations
 from django.shortcuts import render
 from .forms import MarkAsReadForm
+from fuzzywuzzy import fuzz
+
+def remove_product(request, product_id):
+    product = Product.objects.filter(id=product_id)
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, 'Product removed successfully.')
+    return redirect('ngo_profile')  # Replace 'your_ngo_view' with the name of your view displaying the NGO profile and products
+
+def update_status(request):
+    if request.method == 'POST':
+        donation_id = request.POST.get('donation_id')
+        new_status = request.POST.get('new_status')
+        # Update the status in the database
+        donation = Donation.objects.get(id=donation_id)
+        donation.status = new_status
+        donation.save()
+    return redirect('userprofile')
 
 def mark_as_read(request):
     if request.method == 'POST':
@@ -42,33 +60,38 @@ def view_volunteers(request):
     if interests:
         volunteers = volunteers.filter(interests__icontains=interests)
 
+    profile = NGO.objects.get(user=request.user)
+    ngo_latitude = profile.latitude
+    ngo_longitude = profile.longitude
+
+    if ngo_latitude and ngo_longitude:
+        volunteers = sorted(volunteers,key=lambda x: haversine_distance(ngo_latitude, ngo_longitude, x.latitude, x.longitude))
+
+    
     context = {
         'volunteers': volunteers,
         'ngoname': request.user.ngo.ngoname 
     }
 
-    lat, lng = get_lat_long(request.user.ngo.ngoprofile.location)
-    print(lat,lng)
-
     return render(request, 'view_volunteers.html', context)
 
 
-def get_lat_long(location):
+# def get_lat_long(location):
 
-    print(location)
-    api_key = 'AIzaSyDBr2z__qKnRrmI2V1Cwf4vs8fUzixEOtQ'
-    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={location}&key={api_key}'
+#     print(location)
+#     api_key = 'AIzaSyDBr2z__qKnRrmI2V1Cwf4vs8fUzixEOtQ'
+#     url = f'https://maps.googleapis.com/maps/api/geocode/json?address={location}&key={api_key}'
 
-    response = requests.get(url)
-    print(response)
-    data = response.json()
-    print(data)
-    if data['status'] == 'OK':
-        lat = data['results'][0]['geometry']['location']['lat']
-        lng = data['results'][0]['geometry']['location']['lng']
-        return lat, lng
-    else:
-        return None, None
+#     response = requests.get(url)
+#     print(response)
+#     data = response.json()
+#     print(data)
+#     if data['status'] == 'OK':
+#         lat = data['results'][0]['geometry']['location']['lat']
+#         lng = data['results'][0]['geometry']['location']['lng']
+#         return lat, lng
+#     else:
+#         return None, None
     
 
 
@@ -193,14 +216,19 @@ def haversine_distance(lat1, lon1, lat2, lon2):
 def home(request):
     return render(request,'index.html',{})
 
+from django.db.models import Q
 
 #view the list of camapigns  (donor)
 @login_required(login_url='login')
 def real_campaigns(request):
+    query = request.GET.get('q')
     camp = CreateCampaign.objects.filter(end_date__gte=timezone.now())
     
-    ngo_profiles = []
+    if query:
+        camp = camp.filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(location__icontains=query))
     
+    ngo_profiles = []
+
     for campaign in camp:
         try:
             ngo = NGO.objects.get(user=campaign.ngo)
@@ -242,10 +270,14 @@ def user_donation(request, user_id, product_id):
     donor = Donor.objects.get(user=userr)
     donations = Donation.objects.filter(user_id=userr)
     product_high = Donation.objects.get(id=product_id)
-    
+    pending_donations = donations.filter(status='PENDING')
+    past_donations = donations.exclude(status='PENDING')
+
     context = {
         'userr':userr,
         'donor': donor,
+        'pending_donations': pending_donations,
+        'past_donations': past_donations,
         'donations': donations,
         'product_high': product_high
     }
@@ -271,11 +303,11 @@ def ngo_dash(request):
     
 
     query = request.GET.get('q')
-    donation = Donation.objects.filter(other_products__icontains=query) if query else Donation.objects.all()
-    # if query:
-    #     donations = DonationDocument.search().query("match", _all=query)
-    # else:
-    #     donations = Donation.objects.all()
+    if query:
+        donation = Donation.objects.filter(other_products__icontains=query, status='PENDING')
+    else:
+        donation = Donation.objects.filter(status='PENDING')
+    
 
     ngo_latitude = profile.latitude
     ngo_longitude = profile.longitude
@@ -325,7 +357,27 @@ def ngo_donations(request, ngo_id, don_id):
 @login_required(login_url='login')
 def main_home(request):
     query = request.GET.get('q')
-    products = Product.objects.filter(productName__icontains=query) if query else Product.objects.all()
+    # products = Product.objects.filter(productName__icontains=query) if query else Product.objects.all()
+    if query:
+        # Perform a keyword-based search using icontains filter
+        products = Product.objects.filter(productName__icontains=query) 
+
+        # Filter products based on fuzzy matching with product name
+        fuzzy_products = []
+        for product in products:
+            # Calculate fuzzy matching score for product name
+            name_score = fuzz.partial_ratio(query, product.productName)
+            if name_score >= 10:  # Adjust the threshold as needed
+                fuzzy_products.append((product, name_score))
+        
+        # Sort fuzzy matched products by score (higher score first)
+        fuzzy_products.sort(key=lambda x: x[1], reverse=True)
+        fuzzy_products = [x[0] for x in fuzzy_products]  # Extract products from tuples
+        
+        # Combine exact matches and fuzzy matches
+        products = list(products) + fuzzy_products
+    else:
+        products = Product.objects.all()
 
     nearest_campaigns = []
 
@@ -410,7 +462,16 @@ def joinus(request):
         if form.is_valid():
             fullname=request.POST['fullname']
             print(fullname)
-            form.save()
+            location_name = request.POST['location']
+            print(location_name)
+            volunteer = form.save()
+            lat, lon = get_lat_lon_from_location(location_name)
+            print(lat,lon)
+            volunteer.latitude = lat
+            print(volunteer.latitude)
+            volunteer.longitude = lon
+            print(volunteer.longitude)
+            volunteer.save()
             messages.success(request,(f'Thank you {fullname}. Your response has been recorded. NGOs will contact you when required!'))
             return redirect('joinus')
         else:
